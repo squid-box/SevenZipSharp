@@ -64,7 +64,7 @@ namespace SevenZip
         {
             Context = null;
             NeedsToBeRecreated = true;
-            GC.SuppressFinalize(this);
+            //GC.SuppressFinalize(this);
         }
 
         private delegate void EventHandlerDelegate<T>(EventHandler<T> handler, T e) where T : EventArgs;

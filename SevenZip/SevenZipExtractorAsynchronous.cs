@@ -93,6 +93,7 @@
         /// </summary>
         /// <param name="extractFileCallback">The callback to call for each file in the archive.</param>
         private delegate void ExtractFiles3Delegate(ExtractFileCallback extractFileCallback);
+        private delegate void ExtractFiles4Delegate(ExtractFileCallback extractFileCallback, Func<OutStreamWrapper> getStream, Action<FileInfoEventArgs> FileExtractStart, Action<FileInfoEventArgs> FileExtractComplete);
         #endregion
 
         /// <summary>
@@ -155,10 +156,10 @@
         /// 7-Zip (and any other solid) archives are NOT supported.
         /// </summary>
         /// <param name="extractFileCallback">The callback to call for each file in the archive.</param>
-        public void BeginExtractFiles(ExtractFileCallback extractFileCallback)
+        public void BeginExtractFiles(ExtractFileCallback extractFileCallback, Func<OutStreamWrapper> getStream = null, Action<FileInfoEventArgs> FileExtractStart = null, Action<FileInfoEventArgs> FileExtractComplete = null)
         {
             SaveContext();
-            new ExtractFiles3Delegate(ExtractFiles).BeginInvoke(extractFileCallback, AsyncCallbackImplementation, this);
+            new ExtractFiles4Delegate(ExtractFiles).BeginInvoke(extractFileCallback, getStream, FileExtractStart, FileExtractComplete, AsyncCallbackImplementation, this);
         }
     }
 }

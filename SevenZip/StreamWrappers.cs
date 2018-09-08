@@ -11,7 +11,7 @@ namespace SevenZip
     /// <summary>
     /// A class that has DisposeStream property.
     /// </summary>
-    internal class DisposeVariableWrapper
+    public class DisposeVariableWrapper
     {
         public bool DisposeStream { protected get; set; }
 
@@ -21,7 +21,7 @@ namespace SevenZip
     /// <summary>
     /// Stream wrapper used in InStreamWrapper
     /// </summary>
-    internal class StreamWrapper : DisposeVariableWrapper, IDisposable
+    public class StreamWrapper : DisposeVariableWrapper, IDisposable
     {
         /// <summary>
         /// File name associated with the stream (for date fix)
@@ -94,7 +94,7 @@ namespace SevenZip
                 catch (ArgumentOutOfRangeException) {}
             }
 
-            GC.SuppressFinalize(this);
+            //GC.SuppressFinalize(this);
         }
 
         #endregion
@@ -162,7 +162,7 @@ namespace SevenZip
     /// <summary>
     /// IOutStream wrapper used in stream write operations.
     /// </summary>
-    internal sealed class OutStreamWrapper : StreamWrapper, ISequentialOutStream, IOutStream
+    public sealed class OutStreamWrapper : StreamWrapper, ISequentialOutStream, IOutStream
     {
         /// <summary>
         /// Initializes a new instance of the OutStreamWrapper class
@@ -268,7 +268,7 @@ namespace SevenZip
                 }
                 Streams.Clear();
             }
-            GC.SuppressFinalize(this);
+            //GC.SuppressFinalize(this);
         }
 
         #endregion
@@ -459,7 +459,7 @@ namespace SevenZip
 
         public void Dispose()
         {
-            GC.SuppressFinalize(this);
+            //GC.SuppressFinalize(this);
         }
 
         #endregion

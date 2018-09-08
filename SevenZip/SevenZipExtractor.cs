@@ -643,8 +643,8 @@ namespace SevenZip
                                                                  List<uint> actualIndexes)
         {
             var aec = String.IsNullOrEmpty(Password)
-                      ? new ArchiveExtractCallback(_archive, directory, filesCount, PreserveDirectoryStructure, actualIndexes, this)
-                      : new ArchiveExtractCallback(_archive, directory, filesCount, PreserveDirectoryStructure, actualIndexes, Password, this);
+                      ? new ArchiveExtractCallback(null, _archive, directory, filesCount, PreserveDirectoryStructure, actualIndexes, this)
+                      : new ArchiveExtractCallback(null, _archive, directory, filesCount, PreserveDirectoryStructure, actualIndexes, Password, this);
             ArchiveExtractCallbackCommonInit(aec);
             return aec;
         }
@@ -656,11 +656,11 @@ namespace SevenZip
         /// <param name="index">The file index</param>
         /// <param name="filesCount">The number of files to be extracted</param>
         /// <returns>The ArchiveExtractCallback callback</returns>
-        private ArchiveExtractCallback GetArchiveExtractCallback(Stream stream, uint index, int filesCount)
+        private ArchiveExtractCallback GetArchiveExtractCallback(Func<OutStreamWrapper> getStream, Stream stream, uint index, int filesCount)
         {
             var aec = String.IsNullOrEmpty(Password)
-                      ? new ArchiveExtractCallback(_archive, stream, filesCount, index, this)
-                      : new ArchiveExtractCallback(_archive, stream, filesCount, index, Password, this);
+                      ? new ArchiveExtractCallback(getStream, _archive, stream, filesCount, index, this)
+                      : new ArchiveExtractCallback(getStream, _archive, stream, filesCount, index, Password, this);
             ArchiveExtractCallbackCommonInit(aec);
             return aec;
         }
@@ -767,7 +767,7 @@ namespace SevenZip
                 CommonDispose();
             }
             _disposed = true;            
-            GC.SuppressFinalize(this);
+            //GC.SuppressFinalize(this);
         }
 
         #endregion
@@ -1033,7 +1033,7 @@ namespace SevenZip
             }
             try
             {
-                using (var aec = GetArchiveExtractCallback(stream, (uint) index, indexes.Length))
+                using (var aec = GetArchiveExtractCallback(null, stream, (uint) index, indexes.Length))
                 {
                     try
                     {
@@ -1203,13 +1203,49 @@ namespace SevenZip
         /// 7-Zip (and any other solid) archives are NOT supported.
         /// </summary>
         /// <param name="extractFileCallback">The callback to call for each file in the archive.</param>
-        public void ExtractFiles(ExtractFileCallback extractFileCallback)
+        public void ExtractFiles(ExtractFileCallback extractFileCallback, Func<OutStreamWrapper> getStream = null, Action<FileInfoEventArgs> FileExtractStart = null, Action<FileInfoEventArgs> FileExtractComplete = null)
         {
             DisposedCheck();
             InitArchiveFileData(false);
-            if (IsSolid)
+            if (IsSolid && getStream != null)
             {
-                // solid strategy
+                DisposedCheck();
+                ClearExceptions();
+                //var indexes = Enumerable.Range(0, ArchiveFileData.Max(k => k.Index)).Select(k=>(uint)k).ToArray();
+                var indexes = ArchiveFileData.Select(k => (uint)k.Index).ToArray();
+                var archiveStream = GetArchiveStream(false);
+                var openCallback = GetArchiveOpenCallback();
+                if (!OpenArchive(archiveStream, openCallback))
+                {
+                    return;
+                }
+                try
+                {
+                    using (var aec = GetArchiveExtractCallback(getStream, null, (uint)0, indexes.Length))
+                    {
+                        aec.FileExtractionStarted += (src, fi) => { FileExtractStart?.Invoke(fi); };
+                        aec.FileExtractionFinished += (src, fi) => { FileExtractComplete?.Invoke(fi); };
+                        try
+                        {
+                            CheckedExecute(
+                                _archive.Extract(indexes, (uint)indexes.Length, 0, aec),
+                                SevenZipExtractionFailedException.DEFAULT_MESSAGE, aec);
+                        }
+                        finally
+                        {
+                            FreeArchiveExtractCallback(aec);
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+                    if (openCallback.ThrowException())
+                    {
+                        throw;
+                    }
+                }
+                OnEvent(ExtractionFinished, EventArgs.Empty, false);
+                ThrowUserException();
             }
             else
             {

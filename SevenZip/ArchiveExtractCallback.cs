@@ -36,6 +36,7 @@ namespace SevenZip
         private OutStreamWrapper _fileStream;
         private bool _directoryStructure;
         private int _currentIndex;
+        private Func<OutStreamWrapper> _getStream;
         const int MEMORY_PRESSURE = 64 * 1024 * 1024; //64mb seems to be the maximum value
 
         #region Constructors
@@ -49,9 +50,10 @@ namespace SevenZip
         /// <param name="extractor">The owner of the callback</param>
         /// <param name="actualIndexes">The list of actual indexes (solid archives support)</param>
         /// <param name="directoryStructure">The value indicating whether to preserve directory structure of extracted files.</param>
-        public ArchiveExtractCallback(IInArchive archive, string directory, int filesCount, bool directoryStructure,
+        public ArchiveExtractCallback(Func<OutStreamWrapper> getStream, IInArchive archive, string directory, int filesCount, bool directoryStructure,
             List<uint> actualIndexes, SevenZipExtractor extractor)
         {
+            this._getStream = getStream;
             Init(archive, directory, filesCount, directoryStructure, actualIndexes, extractor);
         }
 
@@ -65,10 +67,11 @@ namespace SevenZip
         /// <param name="extractor">The owner of the callback</param>
         /// <param name="actualIndexes">The list of actual indexes (solid archives support)</param>
         /// <param name="directoryStructure">The value indicating whether to preserve directory structure of extracted files.</param>
-        public ArchiveExtractCallback(IInArchive archive, string directory, int filesCount, bool directoryStructure,
+        public ArchiveExtractCallback(Func<OutStreamWrapper> getStream, IInArchive archive, string directory, int filesCount, bool directoryStructure,
             List<uint> actualIndexes, string password, SevenZipExtractor extractor)
             : base(password)
         {
+            this._getStream = getStream;
             Init(archive, directory, filesCount, directoryStructure, actualIndexes, extractor);
         }
 
@@ -80,9 +83,10 @@ namespace SevenZip
         /// <param name="filesCount">The archive files count</param>
         /// <param name="fileIndex">The file index for the stream</param>
         /// <param name="extractor">The owner of the callback</param>
-        public ArchiveExtractCallback(IInArchive archive, Stream stream, int filesCount, uint fileIndex,
+        public ArchiveExtractCallback(Func<OutStreamWrapper> getStream, IInArchive archive, Stream stream, int filesCount, uint fileIndex,
                                       SevenZipExtractor extractor)
         {
+            this._getStream = getStream;
             Init(archive, stream, filesCount, fileIndex, extractor);
         }
 
@@ -95,10 +99,11 @@ namespace SevenZip
         /// <param name="fileIndex">The file index for the stream</param>
         /// <param name="password">Password for the archive</param>
         /// <param name="extractor">The owner of the callback</param>
-        public ArchiveExtractCallback(IInArchive archive, Stream stream, int filesCount, uint fileIndex, string password,
+        public ArchiveExtractCallback(Func<OutStreamWrapper> getStream, IInArchive archive, Stream stream, int filesCount, uint fileIndex, string password,
                                       SevenZipExtractor extractor)
             : base(password)
         {
+            this._getStream = getStream;
             Init(archive, stream, filesCount, fileIndex, extractor);
         }
 
@@ -130,7 +135,7 @@ namespace SevenZip
             _fakeStream = new FakeOutStreamWrapper();
             _fakeStream.BytesWritten += IntEventArgsHandler;
             _extractor = extractor;
-            GC.AddMemoryPressure(MEMORY_PRESSURE);
+            //GC.AddMemoryPressure(MEMORY_PRESSURE);
         }
         #endregion
 
@@ -382,14 +387,21 @@ namespace SevenZip
                 {
                     #region Extraction to a stream
 
-                    if (index == _fileIndex)
+                    if (_getStream == null)
                     {
-                        outStream = _fileStream;
-                        _fileIndex = null;
+                        if (index == _fileIndex)
+                        {
+                            outStream = _fileStream;
+                            _fileIndex = null;
+                        }
+                        else
+                        {
+                            outStream = _fakeStream;
+                        }
                     }
                     else
                     {
-                        outStream = _fakeStream;
+                        outStream = _getStream();
                     }
 
                     #endregion
@@ -458,8 +470,8 @@ namespace SevenZip
                     }
                     catch (ObjectDisposedException) { }
                     _fileStream = null;
-                    GC.Collect();
-                    GC.WaitForPendingFinalizers();
+                    //GC.Collect();
+                    //GC.WaitForPendingFinalizers();
                 }
                 var iea = new FileInfoEventArgs(
                     _extractor.ArchiveFileData[_currentIndex], PercentDoneEventArgs.ProducePercentDone(_doneRate));                
@@ -492,7 +504,7 @@ namespace SevenZip
 
         public void Dispose()
         {
-            GC.RemoveMemoryPressure(MEMORY_PRESSURE);
+            //GC.RemoveMemoryPressure(MEMORY_PRESSURE);
 
             if (_fileStream != null)
             {
