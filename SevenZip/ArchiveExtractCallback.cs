@@ -36,7 +36,7 @@ namespace SevenZip
         private OutStreamWrapper _fileStream;
         private bool _directoryStructure;
         private int _currentIndex;
-        private Func<OutStreamWrapper> _getStream;
+        private Func<uint, OutStreamWrapper> _getStream;
         const int MEMORY_PRESSURE = 64 * 1024 * 1024; //64mb seems to be the maximum value
 
         #region Constructors
@@ -50,7 +50,7 @@ namespace SevenZip
         /// <param name="extractor">The owner of the callback</param>
         /// <param name="actualIndexes">The list of actual indexes (solid archives support)</param>
         /// <param name="directoryStructure">The value indicating whether to preserve directory structure of extracted files.</param>
-        public ArchiveExtractCallback(Func<OutStreamWrapper> getStream, IInArchive archive, string directory, int filesCount, bool directoryStructure,
+        public ArchiveExtractCallback(Func<uint, OutStreamWrapper> getStream, IInArchive archive, string directory, int filesCount, bool directoryStructure,
             List<uint> actualIndexes, SevenZipExtractor extractor)
         {
             this._getStream = getStream;
@@ -67,7 +67,7 @@ namespace SevenZip
         /// <param name="extractor">The owner of the callback</param>
         /// <param name="actualIndexes">The list of actual indexes (solid archives support)</param>
         /// <param name="directoryStructure">The value indicating whether to preserve directory structure of extracted files.</param>
-        public ArchiveExtractCallback(Func<OutStreamWrapper> getStream, IInArchive archive, string directory, int filesCount, bool directoryStructure,
+        public ArchiveExtractCallback(Func<uint, OutStreamWrapper> getStream, IInArchive archive, string directory, int filesCount, bool directoryStructure,
             List<uint> actualIndexes, string password, SevenZipExtractor extractor)
             : base(password)
         {
@@ -83,7 +83,7 @@ namespace SevenZip
         /// <param name="filesCount">The archive files count</param>
         /// <param name="fileIndex">The file index for the stream</param>
         /// <param name="extractor">The owner of the callback</param>
-        public ArchiveExtractCallback(Func<OutStreamWrapper> getStream, IInArchive archive, Stream stream, int filesCount, uint fileIndex,
+        public ArchiveExtractCallback(Func<uint, OutStreamWrapper> getStream, IInArchive archive, Stream stream, int filesCount, uint fileIndex,
                                       SevenZipExtractor extractor)
         {
             this._getStream = getStream;
@@ -99,7 +99,7 @@ namespace SevenZip
         /// <param name="fileIndex">The file index for the stream</param>
         /// <param name="password">Password for the archive</param>
         /// <param name="extractor">The owner of the callback</param>
-        public ArchiveExtractCallback(Func<OutStreamWrapper> getStream, IInArchive archive, Stream stream, int filesCount, uint fileIndex, string password,
+        public ArchiveExtractCallback(Func<uint, OutStreamWrapper> getStream, IInArchive archive, Stream stream, int filesCount, uint fileIndex, string password,
                                       SevenZipExtractor extractor)
             : base(password)
         {
@@ -401,7 +401,7 @@ namespace SevenZip
                     }
                     else
                     {
-                        outStream = _getStream();
+                        outStream = _getStream(_fileIndex.Value);
                     }
 
                     #endregion
@@ -436,7 +436,9 @@ namespace SevenZip
             return 0;
         }
 
-        public void PrepareOperation(AskMode askExtractMode) { }
+        public Func<AskMode, AskMode> PrepareChecker = null;
+
+        public void PrepareOperation(AskMode askExtractMode) { if (PrepareChecker != null) askExtractMode = PrepareChecker(askExtractMode); }
 
         /// <summary>
         /// Called when the archive was extracted

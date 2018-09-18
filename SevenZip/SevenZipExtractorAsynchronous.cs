@@ -93,7 +93,7 @@
         /// </summary>
         /// <param name="extractFileCallback">The callback to call for each file in the archive.</param>
         private delegate void ExtractFiles3Delegate(ExtractFileCallback extractFileCallback);
-        private delegate void ExtractFiles4Delegate(ExtractFileCallback extractFileCallback, Func<OutStreamWrapper> getStream, Action<FileInfoEventArgs> FileExtractStart, Action<FileInfoEventArgs> FileExtractComplete);
+        private delegate void ExtractFiles4Delegate(ExtractFileCallback extractFileCallback, Func<uint, OutStreamWrapper> getStream, Action<FileInfoEventArgs> FileExtractStart, Action<FileInfoEventArgs> FileExtractComplete, Func<AskMode, AskMode> prepareCheck, int? entryIndex);
         #endregion
 
         /// <summary>
@@ -156,10 +156,10 @@
         /// 7-Zip (and any other solid) archives are NOT supported.
         /// </summary>
         /// <param name="extractFileCallback">The callback to call for each file in the archive.</param>
-        public void BeginExtractFiles(ExtractFileCallback extractFileCallback, Func<OutStreamWrapper> getStream = null, Action<FileInfoEventArgs> FileExtractStart = null, Action<FileInfoEventArgs> FileExtractComplete = null)
+        public void BeginExtractFiles(ExtractFileCallback extractFileCallback, Func<uint, OutStreamWrapper> getStream = null, Action<FileInfoEventArgs> FileExtractStart = null, Action<FileInfoEventArgs> FileExtractComplete = null, Func<AskMode, AskMode> prepareCheck = null, int? entryIndex = null)
         {
             SaveContext();
-            new ExtractFiles4Delegate(ExtractFiles).BeginInvoke(extractFileCallback, getStream, FileExtractStart, FileExtractComplete, AsyncCallbackImplementation, this);
+            new ExtractFiles4Delegate(ExtractFiles).BeginInvoke(extractFileCallback, getStream, FileExtractStart, FileExtractComplete, prepareCheck, entryIndex, AsyncCallbackImplementation, this);
         }
     }
 }

@@ -381,7 +381,7 @@
     /// <summary>
     /// Stores file extraction modes.
     /// </summary>
-    internal enum AskMode
+    public enum AskMode
     {
         /// <summary>
         /// Extraction mode
