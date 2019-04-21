@@ -187,7 +187,7 @@ namespace SevenZip
                 _wrappers = null;
             }
 
-            GC.SuppressFinalize(this);
+            //GC.SuppressFinalize(this);
         }
 
         #endregion        

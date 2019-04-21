@@ -264,7 +264,7 @@ namespace SevenZip
             set
             {
                 _memoryPressure = (int)(value * 1024 * 1024);
-                GC.AddMemoryPressure(_memoryPressure);
+                //GC.AddMemoryPressure(_memoryPressure);
             }
         }
 
@@ -706,7 +706,7 @@ namespace SevenZip
                         _wrappersToDispose.Add(_fileStream);
                     }                                
                 _fileStream = null;
-                GC.Collect();
+                //GC.Collect();
                 // Issue #6987
                 //GC.WaitForPendingFinalizers();
             }
@@ -730,7 +730,7 @@ namespace SevenZip
 
         public void Dispose()
         {
-            GC.RemoveMemoryPressure(_memoryPressure);
+            //GC.RemoveMemoryPressure(_memoryPressure);
 
             if (_fileStream != null)
             {
@@ -753,7 +753,7 @@ namespace SevenZip
                 }
             }
 
-            GC.SuppressFinalize(this);
+            //GC.SuppressFinalize(this);
         }
 
         #endregion
