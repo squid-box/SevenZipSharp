@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net45</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net45;net462</TargetFrameworks>
     <AssemblyTitle>SevenZip.Tests</AssemblyTitle>
     <Product>SevenZipzTests</Product>
     <Copyright>Copyright ©  2018</Copyright>
@@ -15,6 +15,11 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="NUnit.ConsoleRunner" Version="3.10.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.16.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.4.0"/>
     <PackageReference Include="OpenCover" Version="4.7.922" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.*" />
     <PackageReference Include="Microsoft.CSharp" Version="4.*" />
