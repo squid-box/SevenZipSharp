@@ -9,6 +9,7 @@
     using SevenZip;
 
     using NUnit.Framework;
+    using System.Reflection;
 
     [TestFixture]
     public class SevenZipExtractorTests : TestBase
@@ -18,8 +19,8 @@
             get
             {
                 var result = new List<TestFile>();
-
-                foreach (var file in Directory.GetFiles(Path.Combine(TestContext.CurrentContext.TestDirectory, "TestData")))
+                //with netstandard2.0 TestContext.CurrentContext.TestDirectory pointed to ~/.nuget/packages/nunit/3.10.1/lib/netstandard2.0
+                foreach (var file in Directory.GetFiles(Path.Combine(Assembly.GetExecutingAssembly().Location, "..", "TestData")))
                 {
                     if (file.Contains("multi") || file.Contains("long_path"))
                     {
@@ -176,8 +177,12 @@
             using (var extractor = new SevenZipExtractor(@"TestData\long_path.7z"))
             {
 #if NET462
+                //dotNet462 can access very long path by UNC - like \\?\disk:\folder\
                 var uncOutputDirectory = @"\\?\"+ Path.GetFullPath(OutputDirectory);
                 Assert.DoesNotThrow(() => extractor.ExtractArchive(uncOutputDirectory));
+#elif NETCOREAPP2_1
+                //netstandard2.0 does not has any problems with long path from sample
+                Assert.DoesNotThrow(() => extractor.ExtractArchive(OutputDirectory));
 #else
                 Assert.Throws<PathTooLongException>(() => extractor.ExtractArchive(OutputDirectory));
 #endif

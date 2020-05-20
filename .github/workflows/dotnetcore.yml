@@ -22,4 +22,4 @@ jobs:
     - name: Build
       run: dotnet build --configuration Release --no-restore
     - name: Test net462
-      run: dotnet test --no-restore --verbosity normal --configuration Release -f net462
+      run: dotnet test --no-restore --verbosity normal --configuration Release
