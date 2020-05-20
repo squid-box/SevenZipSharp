@@ -75,13 +75,13 @@
 
         public new void Dispose()
         {
-            if(_leaveOpen)
+            if(!_leaveOpen)
                 Source.Dispose();
         }
 
         public override void Close()
         {
-            if(_leaveOpen)
+            if(!_leaveOpen)
                 Source.Close();
         }
     }
