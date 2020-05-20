@@ -175,7 +175,12 @@
         {
             using (var extractor = new SevenZipExtractor(@"TestData\long_path.7z"))
             {
+#if NET462
+                var uncOutputDirectory = @"\\?\"+ Path.GetFullPath(OutputDirectory);
+                Assert.DoesNotThrow(() => extractor.ExtractArchive(uncOutputDirectory));
+#else
                 Assert.Throws<PathTooLongException>(() => extractor.ExtractArchive(OutputDirectory));
+#endif
             }
         }
 
