@@ -107,7 +107,7 @@ namespace SevenZip
             SevenZipLibraryManager.LoadLibrary(this, _format);
             try
             {
-                _inStream = new ArchiveEmulationStreamProxy(stream, _offset);
+                _inStream = new ArchiveEmulationStreamProxy(stream, _offset, false);
 				_packedSize = stream.Length;
                 _archive = SevenZipLibraryManager.InArchive(_format, this);
             }
@@ -124,7 +124,7 @@ namespace SevenZip
                     _format = InArchiveFormat.PE;
                     try
                     {
-                        _inStream = new ArchiveEmulationStreamProxy(stream, _offset);
+                        _inStream = new ArchiveEmulationStreamProxy(stream, _offset, false);
                         _packedSize = stream.Length;
                         _archive = SevenZipLibraryManager.InArchive(_format, this);
                     }
