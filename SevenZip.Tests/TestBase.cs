@@ -14,7 +14,7 @@
         public void SetUp()
         {
             // Ensures we're in the correct working directory (for test data files).
-            Directory.SetCurrentDirectory(TestContext.CurrentContext.TestDirectory);
+            Directory.SetCurrentDirectory(TestContext.CurrentContext.WorkDirectory);
             Directory.CreateDirectory(OutputDirectory);
         }
 

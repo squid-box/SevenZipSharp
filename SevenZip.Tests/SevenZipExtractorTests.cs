@@ -20,7 +20,7 @@
             {
                 var result = new List<TestFile>();
                 //with netstandard2.0 TestContext.CurrentContext.TestDirectory pointed to ~/.nuget/packages/nunit/3.10.1/lib/netstandard2.0
-                foreach (var file in Directory.GetFiles(Path.Combine(Assembly.GetExecutingAssembly().Location, "..", "TestData")))
+                foreach (var file in Directory.GetFiles(Path.Combine(TestContext.CurrentContext.WorkDirectory, "TestData")))
                 {
                     if (file.Contains("multi") || file.Contains("long_path"))
                     {
@@ -97,11 +97,14 @@
         public void ExtractionFromStreamTest()
         {
             // TODO: Rewrite this to test against more/all TestData archives.
-
-            using (var tmp = new SevenZipExtractor(File.OpenRead(@"TestData\multiple_files.7z")))
+            using (var fstream = File.OpenRead(@"TestData\multiple_files.7z"))
             {
-                tmp.ExtractArchive(OutputDirectory);
+                using (var tmp = new SevenZipExtractor(fstream))
+                {
+                    tmp.ExtractArchive(OutputDirectory);
+                }
                 Assert.AreEqual(3, Directory.GetFiles(OutputDirectory).Length);
+                Assert.DoesNotThrow( () => fstream.Seek(0, SeekOrigin.Begin) );
             }
         }
 
