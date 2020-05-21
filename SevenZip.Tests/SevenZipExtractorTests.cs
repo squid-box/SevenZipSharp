@@ -20,7 +20,7 @@
             {
                 var result = new List<TestFile>();
                 //with netstandard2.0 TestContext.CurrentContext.TestDirectory pointed to ~/.nuget/packages/nunit/3.10.1/lib/netstandard2.0
-                foreach (var file in Directory.GetFiles(Path.Combine(TestContext.CurrentContext.WorkDirectory, "TestData")))
+                foreach (var file in Directory.GetFiles(Path.Combine(Assembly.GetExecutingAssembly().Location, "..", "TestData")))
                 {
                     if (file.Contains("multi") || file.Contains("long_path"))
                     {
