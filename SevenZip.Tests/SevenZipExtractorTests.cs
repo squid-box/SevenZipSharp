@@ -99,12 +99,26 @@
             // TODO: Rewrite this to test against more/all TestData archives.
             using (var fstream = File.OpenRead(@"TestData\multiple_files.7z"))
             {
-                using (var tmp = new SevenZipExtractor(fstream))
+                using (var tmp = new SevenZipExtractor(fstream, leaveOpen: false))
                 {
                     tmp.ExtractArchive(OutputDirectory);
                 }
                 Assert.AreEqual(3, Directory.GetFiles(OutputDirectory).Length);
-                Assert.DoesNotThrow( () => fstream.Seek(0, SeekOrigin.Begin) );
+                Assert.Throws<ObjectDisposedException>( () => fstream.Seek(0, SeekOrigin.Begin) );
+            }
+        }
+
+        [Test]
+        public void ExtractionFromStreamLeaveOpenTest()
+        {
+            using (var fstream = File.OpenRead(@"TestData\multiple_files.7z"))
+            {
+                using (var tmp = new SevenZipExtractor(fstream, leaveOpen: true))
+                {
+                    tmp.ExtractArchive(OutputDirectory);
+                }
+                Assert.AreEqual(3, Directory.GetFiles(OutputDirectory).Length);
+                Assert.DoesNotThrow(() => fstream.Seek(0, SeekOrigin.Begin));
             }
         }
 
