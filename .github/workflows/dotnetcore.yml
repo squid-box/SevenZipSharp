@@ -28,7 +28,7 @@ jobs:
       run: dotnet test --no-restore --verbosity normal --configuration Release -f net462 --logger "nunit;LogFilePath=TestResults\test-result-net462.xml"
 
     - name: NUnit Reporter
-    - uses: MirrorNG/nunit-reporter@v1.0.5
+      uses: MirrorNG/nunit-reporter@v1.0.5
       if: always()
       with: 
         path: 'TestResults/*.xml'
