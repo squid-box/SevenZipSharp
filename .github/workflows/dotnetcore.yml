@@ -17,9 +17,19 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.101
+
     - name: Install dependencies
       run: dotnet restore
+
     - name: Build
       run: dotnet build --configuration Release --no-restore
-    - name: Test
-      run: dotnet test --no-restore --verbosity normal --configuration Release
+
+    - name: Test net462
+      run: dotnet test --no-restore --verbosity normal --configuration Release -f net462 --logger "nunit;LogFilePath=TestResults\test-result-net462.xml"
+
+    - name: NUnit Reporter
+    - uses: MirrorNG/nunit-reporter@v1.0.5
+      if: always()
+      with: 
+        path: 'TestResults/*.xml'
+        access-token: ${{secrets.GITHUB_TOKEN}}
