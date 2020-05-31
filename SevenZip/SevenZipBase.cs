@@ -15,7 +15,7 @@ namespace SevenZip
     {
         private readonly bool _reportErrors;
         private readonly int _uniqueID;
-        private static readonly object _syncUniqueIds = new object();
+        private static readonly object _uniqueIdLock = new object();
         private static int _lastUniqueId = int.MinValue;
 
         /// <summary>
@@ -104,7 +104,7 @@ namespace SevenZip
 
         private static int GetUniqueID()
         {
-            lock (_syncUniqueIds)
+            lock (_uniqueIdLock)
             {
                 return _lastUniqueId++;
             }
