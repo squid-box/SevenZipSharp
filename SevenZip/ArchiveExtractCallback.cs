@@ -565,9 +565,12 @@ namespace SevenZip
         private static string RemoveIllegalCharacters(string str, bool isDirectory = false)
         {
 #if NET462
-            var isUncPath = str.StartsWith(@"\\?\");
-            if(isUncPath)
-                str = str.Substring(@"\\?\".Length);
+            const string UncPathPrefix = @"\\?\";
+            var isUncPath = str.StartsWith(UncPathPrefix);
+            if (isUncPath)
+            {
+                str = str.Substring(UncPathPrefix.Length);
+            }
 #endif
             var splittedFileName = new List<string>(str.Split(Path.DirectorySeparatorChar));
 
@@ -600,7 +603,9 @@ namespace SevenZip
             var result = String.Join(new string(Path.DirectorySeparatorChar, 1), splittedFileName.ToArray());
 #if NET462
             if (isUncPath)
-                result = @"\\?\" + result;
+            {
+                result = UncPathPrefix + result;
+            }
 #endif
             return result;
         }

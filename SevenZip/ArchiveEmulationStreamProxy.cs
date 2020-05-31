@@ -19,6 +19,7 @@
         public Stream Source { get; }
 
         readonly bool _leaveOpen = false;
+
         /// <summary>
         /// Initializes a new instance of the ArchiveEmulationStream class.
         /// </summary>
