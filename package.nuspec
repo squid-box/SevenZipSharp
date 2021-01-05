@@ -16,6 +16,7 @@
 		</releaseNotes>
     <dependencies>
       <group targetFramework="net45" />
+	  <group targetFramework="net462" />
       <group targetFramework="netstandard2.0">
         <dependency id="System.Configuration.ConfigurationManager" version="4.5.0" />
         <dependency id="System.Security.Permissions" version="4.5.0" />
@@ -25,6 +26,7 @@
 	<files>
 	    <file src="Stage\Release\netstandard2.0\SevenZipSharp.dll" target="lib\netstandard2.0" />
 	    <file src="Stage\Release\net45\SevenZipSharp.dll" target="lib\net45" />
+		<file src="Stage\Release\net462\SevenZipSharp.dll" target="lib\net462" />
 	    <file src="license" />
 	</files>
 </package>
