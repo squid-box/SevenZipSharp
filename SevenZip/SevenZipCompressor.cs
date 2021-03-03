@@ -7,7 +7,7 @@ namespace SevenZip
     using System.Linq;
     using System.Runtime.InteropServices;
     using System.Security.Permissions;
-
+    using SevenZip.EventArguments;
     using SevenZip.Sdk;
     using SevenZip.Sdk.Compression.Lzma;
 
@@ -717,6 +717,7 @@ namespace SevenZip
         {
             auc.FileCompressionStarted += FileCompressionStartedEventProxy;
             auc.Compressing += CompressingEventProxy;
+            auc.Progressing += ProgressingEventProxy;
             auc.FileCompressionFinished += FileCompressionFinishedEventProxy;
             auc.DefaultItemName = DefaultItemName;
             auc.FastCompression = FastCompression;
@@ -882,6 +883,7 @@ namespace SevenZip
         {
             callback.FileCompressionStarted -= FileCompressionStartedEventProxy;
             callback.Compressing -= CompressingEventProxy;
+            callback.Progressing -= ProgressingEventProxy;
             callback.FileCompressionFinished -= FileCompressionFinishedEventProxy;
         }
 
@@ -995,8 +997,15 @@ namespace SevenZip
         /// <summary>
         /// Occurs when data are being compressed
         /// </summary>
-        /// <remarks>Use this event for accurate progress handling and various ProgressBar.StepBy(e.PercentDelta) routines</remarks>
+        /// <remarks>Use this event for semi-accurate progress and various ProgressBar.StepBy(e.PercentDelta) routines</remarks>
         public event EventHandler<ProgressEventArgs> Compressing;
+
+        /// <summary>
+        /// Occurs when the 7z library indicates work has been done
+        /// </summary>
+        /// <remarks>Use this event for your own handling of accurate progress.</remarks>
+        public event EventHandler<DetailedProgressEventArgs> Progressing;
+
 
         /// <summary>
         /// Occurs when all files information was determined and SevenZipCompressor is about to start to compress them.
@@ -1039,6 +1048,16 @@ namespace SevenZip
         private void CompressingEventProxy(object sender, ProgressEventArgs e)
         {
             OnEvent(Compressing, e, false);
+        }
+
+        /// <summary>
+        /// Event proxy for Progressing.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">The event arguments.</param>
+        private void ProgressingEventProxy(object sender, DetailedProgressEventArgs e)
+        {
+            OnEvent(Progressing, e, false);
         }
 
         /// <summary>
