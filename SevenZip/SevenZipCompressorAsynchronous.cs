@@ -146,11 +146,17 @@
         /// </summary>
         /// <param name="fileFullNames">Array of file names to pack.</param>
         /// <param name="archiveName">The archive file name.</param>
-        public Task CompressFilesAsync(string archiveName, params string[] fileFullNames)
+        public async Task CompressFilesAsync(string archiveName, params string[] fileFullNames)
         {
-            SaveContext();
-            return Task.Run(() => new CompressFiles1Delegate(CompressFiles).Invoke(archiveName, fileFullNames))
-                .ContinueWith(_ => ReleaseContext());
+            try
+            {
+                SaveContext();
+                await Task.Run(() => new CompressFiles1Delegate(CompressFiles).Invoke(archiveName, fileFullNames));
+            }
+            finally
+            {
+                ReleaseContext();
+            }
         }
 
         /// <summary>
@@ -159,11 +165,17 @@
         /// <param name="fileFullNames">Array of file names to pack.</param>
         /// <param name="archiveStream">The archive output stream. 
         /// Use CompressFiles(string archiveName ... ) overloads for archiving to disk.</param>
-        public Task CompressFilesAsync(Stream archiveStream, params string[] fileFullNames)
+        public async Task CompressFilesAsync(Stream archiveStream, params string[] fileFullNames)
         {
-            SaveContext();
-            return Task.Run(() => new CompressFiles2Delegate(CompressFiles).Invoke(archiveStream, fileFullNames))
-                .ContinueWith(_ => ReleaseContext());
+            try
+            {
+                SaveContext();
+                await Task.Run(() => new CompressFiles2Delegate(CompressFiles).Invoke(archiveStream, fileFullNames));
+            }
+            finally
+            {
+                ReleaseContext();
+            }
         }
 
         /// <summary>
@@ -172,11 +184,17 @@
         /// <param name="fileFullNames">Array of file names to pack.</param>
         /// <param name="commonRootLength">The length of the common root of the file names.</param>
         /// <param name="archiveName">The archive file name.</param>
-        public Task CompressFilesAsync(string archiveName, int commonRootLength, params string[] fileFullNames)
+        public async Task CompressFilesAsync(string archiveName, int commonRootLength, params string[] fileFullNames)
         {
-            SaveContext();
-            return Task.Run(() => new CompressFiles3Delegate(CompressFiles).Invoke(archiveName, commonRootLength, fileFullNames))
-                .ContinueWith(_ => ReleaseContext());
+            try
+            {
+                SaveContext();
+                await Task.Run(() => new CompressFiles3Delegate(CompressFiles).Invoke(archiveName, commonRootLength, fileFullNames));
+            }
+            finally
+            {
+                ReleaseContext();
+            }
         }
 
         /// <summary>
@@ -186,11 +204,17 @@
         /// <param name="commonRootLength">The length of the common root of the file names.</param>
         /// <param name="archiveStream">The archive output stream.
         /// Use CompressFiles(string archiveName, ... ) overloads for archiving to disk.</param>
-        public Task CompressFilesAsync(Stream archiveStream, int commonRootLength, params string[] fileFullNames)
+        public async Task CompressFilesAsync(Stream archiveStream, int commonRootLength, params string[] fileFullNames)
         {
-            SaveContext();
-            return Task.Run(() => new CompressFiles4Delegate(CompressFiles).Invoke(archiveStream, commonRootLength, fileFullNames))
-                .ContinueWith(_ => ReleaseContext());
+            try
+            {
+                SaveContext();
+                await Task.Run(() => new CompressFiles4Delegate(CompressFiles).Invoke(archiveStream, commonRootLength, fileFullNames));
+            }
+            finally
+            {
+                ReleaseContext();
+            }
         }
 
         /// <summary>
@@ -199,11 +223,17 @@
         /// <param name="fileFullNames">Array of file names to pack.</param>
         /// <param name="archiveName">The archive file name</param>
         /// <param name="password">The archive password.</param>
-        public Task CompressFilesEncryptedAsync(string archiveName, string password, params string[] fileFullNames)
+        public async Task CompressFilesEncryptedAsync(string archiveName, string password, params string[] fileFullNames)
         {
-            SaveContext();
-            return Task.Run(() => new CompressFilesEncrypted1Delegate(CompressFilesEncrypted).Invoke(archiveName, password, fileFullNames))
-                .ContinueWith(_ => ReleaseContext());
+            try
+            {
+                SaveContext();
+                await Task.Run(() => new CompressFilesEncrypted1Delegate(CompressFilesEncrypted).Invoke(archiveName, password, fileFullNames));
+            }
+            finally
+            {
+                ReleaseContext();
+            }
         }
 
         /// <summary>
@@ -213,11 +243,17 @@
         /// <param name="archiveStream">The archive output stream.
         /// Use CompressFiles( ... string archiveName ... ) overloads for archiving to disk.</param>
         /// <param name="password">The archive password.</param>
-        public Task CompressFilesEncryptedAsync(Stream archiveStream, string password, params string[] fileFullNames)
+        public async Task CompressFilesEncryptedAsync(Stream archiveStream, string password, params string[] fileFullNames)
         {
-            SaveContext();
-            return Task.Run(() => new CompressFilesEncrypted2Delegate(CompressFilesEncrypted).Invoke(archiveStream, password, fileFullNames))
-                .ContinueWith(_ => ReleaseContext());
+            try
+            {
+                SaveContext();
+                await Task.Run(() => new CompressFilesEncrypted2Delegate(CompressFilesEncrypted).Invoke(archiveStream, password, fileFullNames));
+            }
+            finally
+            {
+                ReleaseContext();
+            }
         }
 
         /// <summary>
@@ -227,11 +263,17 @@
         /// <param name="archiveName">The archive file name</param>
         /// <param name="password">The archive password.</param>
         /// <param name="commonRootLength">The length of the common root of the file names.</param>
-        public Task CompressFilesEncryptedAsync(string archiveName, int commonRootLength, string password, params string[] fileFullNames)
+        public async Task CompressFilesEncryptedAsync(string archiveName, int commonRootLength, string password, params string[] fileFullNames)
         {
-            SaveContext();
-            return Task.Run(() => new CompressFilesEncrypted3Delegate(CompressFilesEncrypted).Invoke(archiveName, commonRootLength, password, fileFullNames))
-                .ContinueWith(_ => ReleaseContext());
+            try
+            {
+                SaveContext();
+                await Task.Run(() => new CompressFilesEncrypted3Delegate(CompressFilesEncrypted).Invoke(archiveName, commonRootLength, password, fileFullNames));
+            }
+            finally
+            {
+                ReleaseContext();
+            }
         }
 
         /// <summary>
@@ -242,11 +284,17 @@
         /// Use CompressFiles( ... string archiveName ... ) overloads for archiving to disk.</param>
         /// <param name="password">The archive password.</param>
         /// <param name="commonRootLength">The length of the common root of the file names.</param>
-        public Task CompressFilesEncryptedAsync(Stream archiveStream, int commonRootLength, string password, params string[] fileFullNames)
+        public async Task CompressFilesEncryptedAsync(Stream archiveStream, int commonRootLength, string password, params string[] fileFullNames)
         {
-            SaveContext();
-            return Task.Run(() => new CompressFilesEncrypted4Delegate(CompressFilesEncrypted).Invoke(archiveStream, commonRootLength, password, fileFullNames))
-                .ContinueWith(_ => ReleaseContext());
+            try
+            {
+                SaveContext();
+                await Task.Run(() => new CompressFilesEncrypted4Delegate(CompressFilesEncrypted).Invoke(archiveStream, commonRootLength, password, fileFullNames));
+            }
+            finally
+            {
+                ReleaseContext();
+            }
         }
 
         #endregion
@@ -296,11 +344,17 @@
         /// <param name="password">The archive password.</param>
         /// <param name="searchPattern">Search string, such as "*.txt".</param>
         /// <param name="recursion">If true, files will be searched for recursively; otherwise, not.</param>
-        public Task CompressDirectoryAsync(string directory, string archiveName, string password = "", string searchPattern = "*", bool recursion = true)
+        public async Task CompressDirectoryAsync(string directory, string archiveName, string password = "", string searchPattern = "*", bool recursion = true)
         {
-            SaveContext();
-            return Task.Run(() => new CompressDirectoryDelegate(CompressDirectory).Invoke(directory, archiveName, password, searchPattern, recursion))
-                .ContinueWith(_ => ReleaseContext());
+            try
+            {
+                SaveContext();
+                await Task.Run(() => new CompressDirectoryDelegate(CompressDirectory).Invoke(directory, archiveName, password, searchPattern, recursion));
+            }
+            finally
+            {
+                ReleaseContext();
+            }
         }
 
         /// <summary>
@@ -312,11 +366,17 @@
         /// <param name="password">The archive password.</param>
         /// <param name="searchPattern">Search string, such as "*.txt".</param>
         /// <param name="recursion">If true, files will be searched for recursively; otherwise, not.</param>
-        public Task CompressDirectoryAsync(string directory, Stream archiveStream, string password, string searchPattern = "*", bool recursion = true)
+        public async Task CompressDirectoryAsync(string directory, Stream archiveStream, string password, string searchPattern = "*", bool recursion = true)
         {
-            SaveContext();
-            return Task.Run(() => new CompressDirectory2Delegate(CompressDirectory).Invoke(directory, archiveStream, password, searchPattern, recursion))
-                .ContinueWith(_ => ReleaseContext());
+            try
+            {
+                SaveContext();
+                await Task.Run(() => new CompressDirectory2Delegate(CompressDirectory).Invoke(directory, archiveStream, password, searchPattern, recursion));
+            }
+            finally
+            {
+                ReleaseContext();
+            }
         }
 
         #endregion
@@ -348,13 +408,19 @@
         /// <param name="outStream">The destination compressed stream.</param>
         /// <param name="password">The archive password.</param>
         /// <exception cref="System.ArgumentException">ArgumentException: at least one of the specified streams is invalid.</exception>
-        public Task CompressStreamAsync(Stream inStream, Stream outStream, string password = "")
+        public async Task CompressStreamAsync(Stream inStream, Stream outStream, string password = "")
         {
-            SaveContext();
-            return Task.Run(() => new CompressStreamDelegate(CompressStream).Invoke(inStream, outStream, password))
-                .ContinueWith(_ => ReleaseContext());
-
+            try
+            {
+                SaveContext();
+                await Task.Run(() => new CompressStreamDelegate(CompressStream).Invoke(inStream, outStream, password));
+            }
+            finally
+            {
+                ReleaseContext();
+            }
         }
+
         #endregion
 
         #region BeginModifyArchive overloads
@@ -382,11 +448,17 @@
         /// <param name="archiveName">The archive file name.</param>
         /// <param name="newFileNames">New file names. Null value to delete the corresponding index.</param>
         /// <param name="password">The archive password.</param>
-        public Task ModifyArchiveAsync(string archiveName, IDictionary<int, string> newFileNames, string password = "")
+        public async Task ModifyArchiveAsync(string archiveName, IDictionary<int, string> newFileNames, string password = "")
         {
-            SaveContext();
-            return Task.Run(() => new ModifyArchiveDelegate(ModifyArchive).Invoke(archiveName, newFileNames, password))
-                .ContinueWith(_ => ReleaseContext());
+            try
+            {
+                SaveContext();
+                await Task.Run(() => new ModifyArchiveDelegate(ModifyArchive).Invoke(archiveName, newFileNames, password));
+            }
+            finally
+            {
+                ReleaseContext();
+            }
         }
 
         #endregion
