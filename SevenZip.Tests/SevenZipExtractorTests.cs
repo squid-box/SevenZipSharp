@@ -76,11 +76,11 @@
         [Test]
         public void ExtractEncryptedArchiveMultiVolumesTest()
         {
-            using (var extractor = new SevenZipExtractor(@"TestData\encrypted_multivolume.0001.rar", ""))
+            using (var extractor = new SevenZipExtractor(@"TestData\encrypted_multivolume.001", ""))
             {
                 Assert.False(extractor.Check());
             }
-            using (var extractor = new SevenZipExtractor(@"TestData\encrypted_multivolume.0001.rar", "1234"))
+            using (var extractor = new SevenZipExtractor(@"TestData\encrypted_multivolume.001", "1234"))
             {
                 Assert.True(extractor.Check());
                 extractor.ExtractArchive(OutputDirectory);
