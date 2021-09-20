@@ -74,6 +74,23 @@
         }
 
         [Test]
+        public void ExtractEncryptedArchiveMultiVolumesTest()
+        {
+            using (var extractor = new SevenZipExtractor(@"TestData\encrypted_multivolume.0001.rar", ""))
+            {
+                Assert.False(extractor.Check());
+            }
+            using (var extractor = new SevenZipExtractor(@"TestData\encrypted_multivolume.0001.rar", "1234"))
+            {
+                Assert.True(extractor.Check());
+                extractor.ExtractArchive(OutputDirectory);
+            }
+
+            Assert.AreEqual(1, Directory.GetFiles(OutputDirectory).Length);
+            Assert.IsTrue(File.ReadAllText(Directory.GetFiles(OutputDirectory)[0]).StartsWith("Lorem ipsum dolor sit amet"));
+        }
+
+        [Test]
         public void ExtractionWithCancellationTest()
         {
             using (var tmp = new SevenZipExtractor(@"TestData\multiple_files.7z"))
@@ -85,7 +102,7 @@
                         e.Cancel = true;
                     }
                 };
-               
+
                 tmp.ExtractArchive(OutputDirectory);
 
                 Assert.AreEqual(2, Directory.GetFiles(OutputDirectory).Length);
@@ -160,10 +177,10 @@
         [Test]
         public void ThreadedExtractionTest()
         {
-	        var destination1 = Path.Combine(OutputDirectory, "t1");
-	        var destination2 = Path.Combine(OutputDirectory, "t2");
+            var destination1 = Path.Combine(OutputDirectory, "t1");
+            var destination2 = Path.Combine(OutputDirectory, "t2");
 
-			var t1 = new Thread(() =>
+            var t1 = new Thread(() =>
             {
                 using (var tmp = new SevenZipExtractor(@"TestData\multiple_files.7z"))
                 {
@@ -172,8 +189,8 @@
             });
             var t2 = new Thread(() =>
             {
-				using (var tmp = new SevenZipExtractor(@"TestData\multiple_files.7z"))
-				{
+                using (var tmp = new SevenZipExtractor(@"TestData\multiple_files.7z"))
+                {
                     tmp.ExtractArchive(destination2);
                 }
             });
@@ -183,11 +200,11 @@
             t1.Join();
             t2.Join();
 
-			Assert.IsTrue(Directory.Exists(destination1));
-	        Assert.IsTrue(Directory.Exists(destination2));
-			Assert.AreEqual(3, Directory.GetFiles(destination1).Length);
-	        Assert.AreEqual(3, Directory.GetFiles(destination2).Length);
-		}
+            Assert.IsTrue(Directory.Exists(destination1));
+            Assert.IsTrue(Directory.Exists(destination2));
+            Assert.AreEqual(3, Directory.GetFiles(destination1).Length);
+            Assert.AreEqual(3, Directory.GetFiles(destination2).Length);
+        }
 
         [Test]
         public void ExtractArchiveWithLongPath()
@@ -211,7 +228,7 @@
                 Assert.AreEqual("file3.txt", fileNames[2]);
             }
         }
-        
+
         [Test]
         public void ReadArchivedFileData()
         {
