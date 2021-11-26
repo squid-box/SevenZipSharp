@@ -90,6 +90,9 @@
             var suspectedFormat = InArchiveFormat.XZ; // any except PE and Cab
             isExecutable = false;
 
+            var detectedFormat = (InArchiveFormat)(-1);
+            var specialFormat = (InArchiveFormat)(-1);
+
             foreach (var expectedSignature in Formats.InSignatureFormats.Keys)
             {
                 if (actualSignature.StartsWith(expectedSignature, StringComparison.OrdinalIgnoreCase) ||
@@ -103,7 +106,8 @@
                     }
                     else
                     {
-                        return Formats.InSignatureFormats[expectedSignature];
+                        detectedFormat = Formats.InSignatureFormats[expectedSignature];
+                        break;
                     }
                 }
             }
@@ -116,58 +120,68 @@
 
             #region SpecialDetect
 
-            try
+            if (SpecialDetect(stream, 257, InArchiveFormat.Tar))
             {
-                SpecialDetect(stream, 257, InArchiveFormat.Tar);
+                specialFormat = InArchiveFormat.Tar;
             }
-            catch (ArgumentException) {}
-
-            if (SpecialDetect(stream, 0x8001, InArchiveFormat.Iso))
+            else if (SpecialDetect(stream, 0x8001, InArchiveFormat.Iso))
             {
-                return InArchiveFormat.Iso;
+                specialFormat = InArchiveFormat.Iso;
             }
-
-            if (SpecialDetect(stream, 0x8801, InArchiveFormat.Iso))
+            else if (SpecialDetect(stream, 0x8801, InArchiveFormat.Iso))
             {
-                return InArchiveFormat.Iso;
+                specialFormat = InArchiveFormat.Iso;
             }
-
-            if (SpecialDetect(stream, 0x9001, InArchiveFormat.Iso))
+            else if (SpecialDetect(stream, 0x9001, InArchiveFormat.Iso))
             {
-                return InArchiveFormat.Iso;
+                specialFormat = InArchiveFormat.Iso;
             }
-
-            if (SpecialDetect(stream, 0x9001, InArchiveFormat.Iso))
+            else if (SpecialDetect(stream, 0x9001, InArchiveFormat.Iso))
             {
-                return InArchiveFormat.Iso;
+                specialFormat = InArchiveFormat.Iso;
             }
-
-            if (SpecialDetect(stream, 0x400, InArchiveFormat.Hfs))
+            else if (SpecialDetect(stream, 0x400, InArchiveFormat.Hfs))
             {
-                return InArchiveFormat.Hfs;
+                specialFormat = InArchiveFormat.Hfs;
             }
 
             #region Last resort for tar - can mistake
 
+            bool isPossiblyTAR = false;
             if (stream.Length >= 1024)
             {
                 stream.Seek(-1024, SeekOrigin.End);
                 var buf = new byte[1024];
                 stream.Read(buf, 0, 1024);
-                var isTar = true;
+                isPossiblyTAR = true;
 
                 for (var i = 0; i < 1024; i++)
                 {
-                    isTar = isTar && buf[i] == 0;
-                }
-
-                if (isTar)
-                {
-                    return InArchiveFormat.Tar;
+                    isPossiblyTAR = isPossiblyTAR && buf[i] == 0;
                 }
             }
 
+            // TAR header starts with the filename of the archive.
+            // The filename can be anything, including the Identifiers of the various archive formats.
+            // This means that a TAR can be misinterpreted as any type of archive.
+            if (specialFormat == InArchiveFormat.Tar
+            || isPossiblyTAR)
+            {
+              var fs = stream as FileStream;
+              if (fs != null)
+              {
+                  string streamFilename = fs.Name;
+                  if (streamFilename.EndsWith (".tar", StringComparison.InvariantCultureIgnoreCase))
+                      detectedFormat = InArchiveFormat.Tar;
+              }
+            }
+
             #endregion
+
+            if (detectedFormat != (InArchiveFormat)(-1))
+              return detectedFormat;
+            if (specialFormat != (InArchiveFormat)(-1))
+              return specialFormat;
 
             #endregion
 
@@ -194,9 +208,9 @@
 
                 #endregion
 
-                foreach (var format in new[] 
+                foreach (var format in new[]
                 {
-                    InArchiveFormat.Zip, 
+                    InArchiveFormat.Zip,
                     InArchiveFormat.SevenZip,
                     InArchiveFormat.Rar4,
                     InArchiveFormat.Rar,
