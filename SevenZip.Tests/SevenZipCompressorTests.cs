@@ -21,7 +21,7 @@
             get
             {
                 var result = new List<CompressionMethod>();
-                foreach(CompressionMethod format in Enum.GetValues(typeof(CompressionMethod)))
+                foreach (CompressionMethod format in Enum.GetValues(typeof(CompressionMethod)))
                 {
                     result.Add(format);
                 }
@@ -84,7 +84,7 @@
                 ArchiveFormat = OutArchiveFormat.SevenZip,
                 DirectoryStructure = false
             };
-            
+
             compressor.CompressFiles(TemporaryFile, @"Testdata\7z_LZMA2.7z");
             Assert.IsTrue(File.Exists(TemporaryFile));
 
@@ -105,7 +105,7 @@
                 DirectoryStructure = false
             };
 
-            compressor.CompressDirectory("TestData", TemporaryFile);
+            compressor.CompressDirectory("TestData", TemporaryFile, recursion: false);
             Assert.IsTrue(File.Exists(TemporaryFile));
 
             using (var extractor = new SevenZipExtractor(TemporaryFile))
@@ -158,8 +158,8 @@
 
             var modificationList = new Dictionary<int, string>
             {
-                {0, "changed.zap"},
-                {1, null }
+                { 0, "changed.zap" },
+                { 1, null }
             };
 
             compressor.ModifyArchive(TemporaryFile, modificationList, "password");
@@ -183,7 +183,7 @@
 
             File.WriteAllText(TemporaryFile, "I'm not an archive.");
 
-            var modificationList = new Dictionary<int, string> {{0, ""}};
+            var modificationList = new Dictionary<int, string> { { 0, "" } };
 
             Assert.Throws<SevenZipArchiveException>(() => compressor.ModifyArchive(TemporaryFile, modificationList));
         }
@@ -200,7 +200,7 @@
             compressor.CompressFiles(TemporaryFile, @"Testdata\7z_LZMA2.7z");
             Assert.IsTrue(File.Exists(TemporaryFile));
 
-            compressor.ModifyArchive(TemporaryFile, new Dictionary<int, string> { { 0, "renamed.7z" }});
+            compressor.ModifyArchive(TemporaryFile, new Dictionary<int, string> { { 0, "renamed.7z" } });
 
             using (var extractor = new SevenZipExtractor(TemporaryFile))
             {
@@ -254,13 +254,13 @@
         [Test]
         public void CompressToStreamTest()
         {
-            var compressor = new SevenZipCompressor {DirectoryStructure = false};
+            var compressor = new SevenZipCompressor { DirectoryStructure = false };
 
             using (var stream = File.Create(TemporaryFile))
             {
                 compressor.CompressFiles(stream, @"TestData\zip.zip");
             }
-            
+
             Assert.IsTrue(File.Exists(TemporaryFile));
 
             using (var extractor = new SevenZipExtractor(TemporaryFile))
@@ -284,7 +284,6 @@
 
                     compressor.CompressStream(input, output);
                 }
-                    
             }
 
             Assert.IsTrue(File.Exists(TemporaryFile));
@@ -303,7 +302,7 @@
 
             var fileDict = new Dictionary<string, string>
             {
-                {"zip.zip", @"TestData\zip.zip"}
+                { "zip.zip", @"TestData\zip.zip" }
             };
 
             compressor.CompressFileDictionary(fileDict, TemporaryFile);
@@ -320,18 +319,18 @@
         [Test]
         public void ThreadedCompressionTest()
         {
-			var tempFile1 = Path.Combine(OutputDirectory, "t1.7z");
-			var tempFile2 = Path.Combine(OutputDirectory, "t2.7z");
+            var tempFile1 = Path.Combine(OutputDirectory, "t1.7z");
+            var tempFile2 = Path.Combine(OutputDirectory, "t2.7z");
 
-			var t1 = new Thread(() =>
+            var t1 = new Thread(() =>
             {
                 var tmp = new SevenZipCompressor();
-				tmp.CompressDirectory("TestData", tempFile1);
-			});
+                tmp.CompressDirectory("TestData", tempFile1);
+            });
 
             var t2 = new Thread(() =>
             {
-                var tmp = new SevenZipCompressor();                
+                var tmp = new SevenZipCompressor();
                 tmp.CompressDirectory("TestData", tempFile2);
             });
 
@@ -340,9 +339,9 @@
             t1.Join();
             t2.Join();
 
-			Assert.IsTrue(File.Exists(tempFile1));
-			Assert.IsTrue(File.Exists(tempFile2));
-		}
+            Assert.IsTrue(File.Exists(tempFile1));
+            Assert.IsTrue(File.Exists(tempFile2));
+        }
 
         [Test, TestCaseSource(nameof(CompressionMethods))]
         public void CompressDifferentFormatsTest(CompressionMethod method)

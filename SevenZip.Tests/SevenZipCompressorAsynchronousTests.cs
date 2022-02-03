@@ -4,6 +4,7 @@
     using System.IO;
     using System.Threading;
     using System.Threading.Tasks;
+
     using NUnit.Framework;
 
     [TestFixture]
@@ -20,13 +21,13 @@
 
             var compressor = new SevenZipCompressor();
 
-            compressor.FilesFound += (o, e) => filesFoundInvoked++;
-            compressor.FileCompressionStarted += (o, e) => fileCompressionStartedInvoked++;
+            compressor.FilesFound              += (o, e) => filesFoundInvoked++;
+            compressor.FileCompressionStarted  += (o, e) => fileCompressionStartedInvoked++;
             compressor.FileCompressionFinished += (o, e) => fileCompressionFinishedInvoked++;
-            compressor.Compressing += (o, e) => compressingInvoked++;
-            compressor.CompressionFinished += (o, e) => compressionFinishedInvoked++;
+            compressor.Compressing             += (o, e) => compressingInvoked++;
+            compressor.CompressionFinished     += (o, e) => compressionFinishedInvoked++;
 
-            compressor.BeginCompressDirectory(@"TestData", TemporaryFile);
+            compressor.BeginCompressDirectory(@"TestData", TemporaryFile, recursion: false);
 
             var timeToWait = 1000;
             while (compressionFinishedInvoked == 0)
@@ -56,7 +57,7 @@
         {
             var compressionFinishedInvoked = false;
 
-            var compressor = new SevenZipCompressor {DirectoryStructure = false};
+            var compressor = new SevenZipCompressor { DirectoryStructure = false };
             compressor.CompressionFinished += (o, e) => compressionFinishedInvoked = true;
 
             compressor.BeginCompressFiles(TemporaryFile, @"TestData\zip.zip", @"TestData\tar.tar");
@@ -129,7 +130,7 @@
             var compressionFinishedInvoked = false;
             compressor.CompressionFinished += (o, e) => compressionFinishedInvoked = true;
 
-            compressor.BeginModifyArchive(TemporaryFile, new Dictionary<int, string>{{0, @"tartar"}});
+            compressor.BeginModifyArchive(TemporaryFile, new Dictionary<int, string> { { 0, @"tartar" } });
 
             var timeToWait = 1000;
             while (!compressionFinishedInvoked)
@@ -206,7 +207,7 @@
         public async Task CompressDirectoryAsync()
         {
             var compressor = new SevenZipCompressor { DirectoryStructure = false };
-            await compressor.CompressDirectoryAsync("TestData", TemporaryFile);
+            await compressor.CompressDirectoryAsync("TestData", TemporaryFile, recursion: false);
 
             Assert.IsTrue(File.Exists(TemporaryFile));
 

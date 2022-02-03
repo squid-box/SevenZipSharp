@@ -12,8 +12,8 @@
     {
         /// <summary>
         /// Open 7-zip archive format.
-        /// </summary>  
-        /// <remarks><a href="http://en.wikipedia.org/wiki/7-zip">Wikipedia information</a></remarks> 
+        /// </summary>
+        /// <remarks><a href="http://en.wikipedia.org/wiki/7-zip">Wikipedia information</a></remarks>
         SevenZip,
         /// <summary>
         /// Proprietary Arj archive format.
@@ -140,7 +140,7 @@
         /// <summary>
         /// Open Xz archive format.
         /// </summary>
-        /// <remarks><a href="http://en.wikipedia.org/wiki/Xz">Wikipedia information</a></remarks>        
+        /// <remarks><a href="http://en.wikipedia.org/wiki/Xz">Wikipedia information</a></remarks>
         XZ,
         /// <summary>
         /// MSLZ archive format.
@@ -154,7 +154,7 @@
         /// <summary>
         /// Shockwave Flash format.
         /// </summary>
-        /// <remarks><a href="http://en.wikipedia.org/wiki/Swf">Wikipedia information</a></remarks>         
+        /// <remarks><a href="http://en.wikipedia.org/wiki/Swf">Wikipedia information</a></remarks>
         Swf,
         /// <summary>
         /// Windows PE executable format.
@@ -241,7 +241,7 @@
 
     /// <summary>
     /// Writable archive format enumeration.
-    /// </summary>    
+    /// </summary>
     public enum OutArchiveFormat
     {
         /// <summary>
@@ -259,7 +259,7 @@
         /// </summary>
         /// <remarks><a href="http://en.wikipedia.org/wiki/Gzip">Wikipedia information</a></remarks>
         GZip,
-        /// <summary>       
+        /// <summary>
         /// Open Bzip2 archive format.
         /// </summary>
         /// <remarks><a href="http://en.wikipedia.org/wiki/Bzip2">Wikipedia information</a></remarks>
@@ -272,7 +272,7 @@
         /// <summary>
         /// Open Xz archive format.
         /// </summary>
-        /// <remarks><a href="http://en.wikipedia.org/wiki/Xz">Wikipedia information</a></remarks>        
+        /// <remarks><a href="http://en.wikipedia.org/wiki/Xz">Wikipedia information</a></remarks>
         XZ
     }
 
@@ -354,6 +354,38 @@
     /// </summary>
     public static class Formats
     {
+        /// <remarks>Partially based on the information at "http://www.garykessler.net/library/file_sigs.html"</remarks>
+        public static readonly IReadOnlyCollection<byte> Signature_ArjArchive            = Array.AsReadOnly(new byte[] { 0x60, 0xEA });
+        public static readonly IReadOnlyCollection<byte> Signature_BZip2Archive          = Array.AsReadOnly(new byte[] { 0x42, 0x5A, 0x68 });
+        public static readonly IReadOnlyCollection<byte> Signature_CabArchive            = Array.AsReadOnly(new byte[] { 0x4D, 0x53, 0x43, 0x46 });
+        public static readonly IReadOnlyCollection<byte> Signature_Chm                   = Array.AsReadOnly(new byte[] { 0x49, 0x54, 0x53, 0x46 });
+        public static readonly IReadOnlyCollection<byte> Signature_CompoundFile          = Array.AsReadOnly(new byte[] { 0xD0, 0xCF, 0x11, 0xE0, 0xA1, 0xB1, 0x1A, 0xE1 });
+        public static readonly IReadOnlyCollection<byte> Signature_DEB                   = Array.AsReadOnly(new byte[] { 0x21, 0x3C, 0x61, 0x72, 0x63, 0x68, 0x3E, 0x0A, 0x64, 0x65, 0x62, 0x69, 0x61, 0x6E, 0x2D, 0x62, 0x69, 0x6E, 0x61, 0x72, 0x79 });
+        public static readonly IReadOnlyCollection<byte> Signature_DMG_AppleDiskImage    = Array.AsReadOnly(new byte[] { 0x6b, 0x6f, 0x6c, 0x79 }); // "koly"
+        public static readonly IReadOnlyCollection<byte> Signature_DosExecutable         = Array.AsReadOnly(new byte[] { 0x4D, 0x5A });  // DOS-EXE header "MZ"
+        public static readonly IReadOnlyCollection<byte> Signature_Elf                   = Array.AsReadOnly(new byte[] { 0x7F, 0x45, 0x4C, 0x46 });
+        public static readonly IReadOnlyCollection<byte> Signature_Flv                   = Array.AsReadOnly(new byte[] { 0x46, 0x4C, 0x56 });
+        public static readonly IReadOnlyCollection<byte> Signature_GZipArchive           = Array.AsReadOnly(new byte[] { 0x1F, 0x8B, 0x08 });
+        public static readonly IReadOnlyCollection<byte> Signature_Hfs                   = Array.AsReadOnly(new byte[] { 0x48, 0x2B });
+        public static readonly IReadOnlyCollection<byte> Signature_Iso                   = Array.AsReadOnly(new byte[] { 0x43, 0x44, 0x30, 0x30, 0x31 });
+        public static readonly IReadOnlyCollection<byte> Signature_LzhArchive            = Array.AsReadOnly(new byte[] { 0x2D, 0x6C, 0x68 });
+        public static readonly IReadOnlyCollection<byte> Signature_LzmaArchive           = Array.AsReadOnly(new byte[] { 0x5D, 0x00, 0x00, 0x40, 0x00 });
+        public static readonly IReadOnlyCollection<byte> Signature_LzwArchive            = Array.AsReadOnly(new byte[] { 0x1F, 0x9D, 0x90 }); // based on internet resources, the signature is only 2 bytes: 0x1f, 0x9d.
+        public static readonly IReadOnlyCollection<byte> Signature_Mub                   = Array.AsReadOnly(new byte[] { 0x6d, 0x75, 0x62 });
+        public static readonly IReadOnlyCollection<byte> Signature_PE_PortableExecutable = Array.AsReadOnly(new byte[] { 0x50, 0x45, 0x00, 0x0 });  // PE header "PE\0\0"
+        public static readonly IReadOnlyCollection<byte> Signature_RarArchive            = Array.AsReadOnly(new byte[] { 0x52, 0x61, 0x72, 0x21, 0x1A, 0x07, 0x01, 0x00 });
+        public static readonly IReadOnlyCollection<byte> Signature_Rar4Archive           = Array.AsReadOnly(new byte[] { 0x52, 0x61, 0x72, 0x21, 0x1A, 0x07, 0x00 });
+        public static readonly IReadOnlyCollection<byte> Signature_Rpm                   = Array.AsReadOnly(new byte[] { 0xED, 0xAB, 0xEE, 0xDB });
+        public static readonly IReadOnlyCollection<byte> Signature_SevenZipArchive       = Array.AsReadOnly(new byte[] { 0x37, 0x7A, 0xBC, 0xAF, 0x27, 0x1C });
+        public static readonly IReadOnlyCollection<byte> Signature_Swf                   = Array.AsReadOnly(new byte[] { 0x46, 0x57, 0x53 });
+        public static readonly IReadOnlyCollection<byte> Signature_USTarArchive          = Array.AsReadOnly(new byte[] { 0x75, 0x73, 0x74, 0x61, 0x72 });
+        public static readonly IReadOnlyCollection<byte> Signature_Udf                   = Array.AsReadOnly(new byte[] { 0x75, 0x64, 0x66 });
+        public static readonly IReadOnlyCollection<byte> Signature_Vhd                   = Array.AsReadOnly(new byte[] { 0x63, 0x6F, 0x6E, 0x65, 0x63, 0x74, 0x69, 0x78 });
+        public static readonly IReadOnlyCollection<byte> Signature_WimArchive            = Array.AsReadOnly(new byte[] { 0x4D, 0x53, 0x57, 0x49, 0x4D, 0x00, 0x00, 0x00 });
+        public static readonly IReadOnlyCollection<byte> Signature_XarArchive            = Array.AsReadOnly(new byte[] { 0x78, 0x61, 0x72, 0x21 });
+        public static readonly IReadOnlyCollection<byte> Signature_XZArchive             = Array.AsReadOnly(new byte[] { 0xFD, 0x37, 0x7A, 0x58, 0x5A });
+        public static readonly IReadOnlyCollection<byte> Signature_ZipArchive            = Array.AsReadOnly(new byte[] { 0x50, 0x4B, 0x03, 0x04 });
+
         /*/// <summary>
         /// Gets the max value of the specified enum type.
         /// </summary>
@@ -371,199 +403,172 @@
         /// </summary>
         internal static readonly Dictionary<InArchiveFormat, Guid> InFormatGuids =
             new Dictionary<InArchiveFormat, Guid>
-            #region InFormatGuids initialization
+                #region InFormatGuids initialization
 
-            {
-                {InArchiveFormat.SevenZip,  new Guid("23170f69-40c1-278a-1000-000110070000")},
-                {InArchiveFormat.Arj,       new Guid("23170f69-40c1-278a-1000-000110040000")},
-                {InArchiveFormat.BZip2,     new Guid("23170f69-40c1-278a-1000-000110020000")},
-                {InArchiveFormat.Cab,       new Guid("23170f69-40c1-278a-1000-000110080000")},
-                {InArchiveFormat.Chm,       new Guid("23170f69-40c1-278a-1000-000110e90000")},
-                {InArchiveFormat.Compound,  new Guid("23170f69-40c1-278a-1000-000110e50000")},
-                {InArchiveFormat.Cpio,      new Guid("23170f69-40c1-278a-1000-000110ed0000")},
-                {InArchiveFormat.Deb,       new Guid("23170f69-40c1-278a-1000-000110ec0000")},
-                {InArchiveFormat.GZip,      new Guid("23170f69-40c1-278a-1000-000110ef0000")},
-                {InArchiveFormat.Iso,       new Guid("23170f69-40c1-278a-1000-000110e70000")},
-                {InArchiveFormat.Lzh,       new Guid("23170f69-40c1-278a-1000-000110060000")},
-                {InArchiveFormat.Lzma,      new Guid("23170f69-40c1-278a-1000-0001100a0000")},
-                {InArchiveFormat.Nsis,      new Guid("23170f69-40c1-278a-1000-000110090000")},
-                {InArchiveFormat.Rar,       new Guid("23170f69-40c1-278a-1000-000110CC0000")},
-                {InArchiveFormat.Rar4,      new Guid("23170f69-40c1-278a-1000-000110030000")},
-                {InArchiveFormat.Rpm,       new Guid("23170f69-40c1-278a-1000-000110eb0000")},
-                {InArchiveFormat.Split,     new Guid("23170f69-40c1-278a-1000-000110ea0000")},
-                {InArchiveFormat.Tar,       new Guid("23170f69-40c1-278a-1000-000110ee0000")},
-                {InArchiveFormat.Wim,       new Guid("23170f69-40c1-278a-1000-000110e60000")},
-                {InArchiveFormat.Lzw,       new Guid("23170f69-40c1-278a-1000-000110050000")},
-                {InArchiveFormat.Zip,       new Guid("23170f69-40c1-278a-1000-000110010000")},
-                {InArchiveFormat.Udf,       new Guid("23170f69-40c1-278a-1000-000110E00000")},
-                {InArchiveFormat.Xar,       new Guid("23170f69-40c1-278a-1000-000110E10000")},
-                {InArchiveFormat.Mub,       new Guid("23170f69-40c1-278a-1000-000110E20000")},
-                {InArchiveFormat.Hfs,       new Guid("23170f69-40c1-278a-1000-000110E30000")},
-                {InArchiveFormat.Dmg,       new Guid("23170f69-40c1-278a-1000-000110E40000")},
-                {InArchiveFormat.XZ,        new Guid("23170f69-40c1-278a-1000-0001100C0000")},
-                {InArchiveFormat.Mslz,      new Guid("23170f69-40c1-278a-1000-000110D50000")},
-                {InArchiveFormat.PE,        new Guid("23170f69-40c1-278a-1000-000110DD0000")},
-                {InArchiveFormat.Elf,       new Guid("23170f69-40c1-278a-1000-000110DE0000")},
-                {InArchiveFormat.Swf,       new Guid("23170f69-40c1-278a-1000-000110D70000")},
-                {InArchiveFormat.Vhd,       new Guid("23170f69-40c1-278a-1000-000110DC0000")},
-                {InArchiveFormat.Flv,       new Guid("23170f69-40c1-278a-1000-000110D60000")},
-                {InArchiveFormat.SquashFS,  new Guid("23170f69-40c1-278a-1000-000110D20000")},
-                {InArchiveFormat.Lzma86,    new Guid("23170f69-40c1-278a-1000-0001100B0000")},
-                {InArchiveFormat.Ppmd,      new Guid("23170f69-40c1-278a-1000-0001100D0000")},
-                {InArchiveFormat.TE,        new Guid("23170f69-40c1-278a-1000-000110CF0000")},
-                {InArchiveFormat.UEFIc,     new Guid("23170f69-40c1-278a-1000-000110D00000")},
-                {InArchiveFormat.UEFIs,     new Guid("23170f69-40c1-278a-1000-000110D10000")},
-                {InArchiveFormat.CramFS,    new Guid("23170f69-40c1-278a-1000-000110D30000")},
-                {InArchiveFormat.APM,       new Guid("23170f69-40c1-278a-1000-000110D40000")},
-                {InArchiveFormat.Swfc,      new Guid("23170f69-40c1-278a-1000-000110D80000")},
-                {InArchiveFormat.Ntfs,      new Guid("23170f69-40c1-278a-1000-000110D90000")},
-                {InArchiveFormat.Fat,       new Guid("23170f69-40c1-278a-1000-000110DA0000")},
-                {InArchiveFormat.Mbr,       new Guid("23170f69-40c1-278a-1000-000110DB0000")},
-                {InArchiveFormat.MachO,     new Guid("23170f69-40c1-278a-1000-000110DF0000")}
-            };
+                {
+                    { InArchiveFormat.SevenZip,  new Guid("23170f69-40c1-278a-1000-000110070000") },
+                    { InArchiveFormat.Arj,       new Guid("23170f69-40c1-278a-1000-000110040000") },
+                    { InArchiveFormat.BZip2,     new Guid("23170f69-40c1-278a-1000-000110020000") },
+                    { InArchiveFormat.Cab,       new Guid("23170f69-40c1-278a-1000-000110080000") },
+                    { InArchiveFormat.Chm,       new Guid("23170f69-40c1-278a-1000-000110e90000") },
+                    { InArchiveFormat.Compound,  new Guid("23170f69-40c1-278a-1000-000110e50000") },
+                    { InArchiveFormat.Cpio,      new Guid("23170f69-40c1-278a-1000-000110ed0000") },
+                    { InArchiveFormat.Deb,       new Guid("23170f69-40c1-278a-1000-000110ec0000") },
+                    { InArchiveFormat.GZip,      new Guid("23170f69-40c1-278a-1000-000110ef0000") },
+                    { InArchiveFormat.Iso,       new Guid("23170f69-40c1-278a-1000-000110e70000") },
+                    { InArchiveFormat.Lzh,       new Guid("23170f69-40c1-278a-1000-000110060000") },
+                    { InArchiveFormat.Lzma,      new Guid("23170f69-40c1-278a-1000-0001100a0000") },
+                    { InArchiveFormat.Nsis,      new Guid("23170f69-40c1-278a-1000-000110090000") },
+                    { InArchiveFormat.Rar,       new Guid("23170f69-40c1-278a-1000-000110CC0000") },
+                    { InArchiveFormat.Rar4,      new Guid("23170f69-40c1-278a-1000-000110030000") },
+                    { InArchiveFormat.Rpm,       new Guid("23170f69-40c1-278a-1000-000110eb0000") },
+                    { InArchiveFormat.Split,     new Guid("23170f69-40c1-278a-1000-000110ea0000") },
+                    { InArchiveFormat.Tar,       new Guid("23170f69-40c1-278a-1000-000110ee0000") },
+                    { InArchiveFormat.Wim,       new Guid("23170f69-40c1-278a-1000-000110e60000") },
+                    { InArchiveFormat.Lzw,       new Guid("23170f69-40c1-278a-1000-000110050000") },
+                    { InArchiveFormat.Zip,       new Guid("23170f69-40c1-278a-1000-000110010000") },
+                    { InArchiveFormat.Udf,       new Guid("23170f69-40c1-278a-1000-000110E00000") },
+                    { InArchiveFormat.Xar,       new Guid("23170f69-40c1-278a-1000-000110E10000") },
+                    { InArchiveFormat.Mub,       new Guid("23170f69-40c1-278a-1000-000110E20000") },
+                    { InArchiveFormat.Hfs,       new Guid("23170f69-40c1-278a-1000-000110E30000") },
+                    { InArchiveFormat.Dmg,       new Guid("23170f69-40c1-278a-1000-000110E40000") },
+                    { InArchiveFormat.XZ,        new Guid("23170f69-40c1-278a-1000-0001100C0000") },
+                    { InArchiveFormat.Mslz,      new Guid("23170f69-40c1-278a-1000-000110D50000") },
+                    { InArchiveFormat.PE,        new Guid("23170f69-40c1-278a-1000-000110DD0000") },
+                    { InArchiveFormat.Elf,       new Guid("23170f69-40c1-278a-1000-000110DE0000") },
+                    { InArchiveFormat.Swf,       new Guid("23170f69-40c1-278a-1000-000110D70000") },
+                    { InArchiveFormat.Vhd,       new Guid("23170f69-40c1-278a-1000-000110DC0000") },
+                    { InArchiveFormat.Flv,       new Guid("23170f69-40c1-278a-1000-000110D60000") },
+                    { InArchiveFormat.SquashFS,  new Guid("23170f69-40c1-278a-1000-000110D20000") },
+                    { InArchiveFormat.Lzma86,    new Guid("23170f69-40c1-278a-1000-0001100B0000") },
+                    { InArchiveFormat.Ppmd,      new Guid("23170f69-40c1-278a-1000-0001100D0000") },
+                    { InArchiveFormat.TE,        new Guid("23170f69-40c1-278a-1000-000110CF0000") },
+                    { InArchiveFormat.UEFIc,     new Guid("23170f69-40c1-278a-1000-000110D00000") },
+                    { InArchiveFormat.UEFIs,     new Guid("23170f69-40c1-278a-1000-000110D10000") },
+                    { InArchiveFormat.CramFS,    new Guid("23170f69-40c1-278a-1000-000110D30000") },
+                    { InArchiveFormat.APM,       new Guid("23170f69-40c1-278a-1000-000110D40000") },
+                    { InArchiveFormat.Swfc,      new Guid("23170f69-40c1-278a-1000-000110D80000") },
+                    { InArchiveFormat.Ntfs,      new Guid("23170f69-40c1-278a-1000-000110D90000") },
+                    { InArchiveFormat.Fat,       new Guid("23170f69-40c1-278a-1000-000110DA0000") },
+                    { InArchiveFormat.Mbr,       new Guid("23170f69-40c1-278a-1000-000110DB0000") },
+                    { InArchiveFormat.MachO,     new Guid("23170f69-40c1-278a-1000-000110DF0000") }
+                };
 
-            #endregion
+        #endregion
 
         /// <summary>
         /// List of writable archive format interface guids for 7-zip COM interop.
         /// </summary>
         internal static readonly Dictionary<OutArchiveFormat, Guid> OutFormatGuids =
             new Dictionary<OutArchiveFormat, Guid>
-            #region OutFormatGuids initialization
+                #region OutFormatGuids initialization
 
-            {
-                {OutArchiveFormat.SevenZip,     new Guid("23170f69-40c1-278a-1000-000110070000")},
-                {OutArchiveFormat.Zip,          new Guid("23170f69-40c1-278a-1000-000110010000")},
-                {OutArchiveFormat.BZip2,        new Guid("23170f69-40c1-278a-1000-000110020000")},
-                {OutArchiveFormat.GZip,         new Guid("23170f69-40c1-278a-1000-000110ef0000")},
-                {OutArchiveFormat.Tar,          new Guid("23170f69-40c1-278a-1000-000110ee0000")},
-                {OutArchiveFormat.XZ,           new Guid("23170f69-40c1-278a-1000-0001100C0000")},                
-            };
+                {
+                    { OutArchiveFormat.SevenZip,     new Guid("23170f69-40c1-278a-1000-000110070000") },
+                    { OutArchiveFormat.Zip,          new Guid("23170f69-40c1-278a-1000-000110010000") },
+                    { OutArchiveFormat.BZip2,        new Guid("23170f69-40c1-278a-1000-000110020000") },
+                    { OutArchiveFormat.GZip,         new Guid("23170f69-40c1-278a-1000-000110ef0000") },
+                    { OutArchiveFormat.Tar,          new Guid("23170f69-40c1-278a-1000-000110ee0000") },
+                    { OutArchiveFormat.XZ,           new Guid("23170f69-40c1-278a-1000-0001100C0000") },
+                };
 
-            #endregion
+        #endregion
 
         internal static readonly Dictionary<CompressionMethod, string> MethodNames =
             new Dictionary<CompressionMethod, string>
-            #region MethodNames initialization
+                #region MethodNames initialization
 
-            {
-                {CompressionMethod.Copy, "Copy"},
-                {CompressionMethod.Deflate, "Deflate"},
-                {CompressionMethod.Deflate64, "Deflate64"},
-                {CompressionMethod.Lzma, "LZMA"},
-                {CompressionMethod.Lzma2, "LZMA2"},
-                {CompressionMethod.Ppmd, "PPMd"},
-                {CompressionMethod.BZip2, "BZip2"}
-            };
+                {
+                    { CompressionMethod.Copy, "Copy" },
+                    { CompressionMethod.Deflate, "Deflate" },
+                    { CompressionMethod.Deflate64, "Deflate64" },
+                    { CompressionMethod.Lzma, "LZMA" },
+                    { CompressionMethod.Lzma2, "LZMA2" },
+                    { CompressionMethod.Ppmd, "PPMd" },
+                    { CompressionMethod.BZip2, "BZip2" }
+                };
 
-            #endregion
+        #endregion
 
         internal static readonly Dictionary<OutArchiveFormat, InArchiveFormat> InForOutFormats =
             new Dictionary<OutArchiveFormat, InArchiveFormat>
-            #region InForOutFormats initialization
+                #region InForOutFormats initialization
 
-            {
-                {OutArchiveFormat.SevenZip, InArchiveFormat.SevenZip},
-                {OutArchiveFormat.GZip, InArchiveFormat.GZip},
-                {OutArchiveFormat.BZip2, InArchiveFormat.BZip2},
-                {OutArchiveFormat.Tar, InArchiveFormat.Tar},
-                {OutArchiveFormat.XZ, InArchiveFormat.XZ},
-                {OutArchiveFormat.Zip, InArchiveFormat.Zip}
-            };
+                {
+                    { OutArchiveFormat.SevenZip, InArchiveFormat.SevenZip },
+                    { OutArchiveFormat.GZip, InArchiveFormat.GZip },
+                    { OutArchiveFormat.BZip2, InArchiveFormat.BZip2 },
+                    { OutArchiveFormat.Tar, InArchiveFormat.Tar },
+                    { OutArchiveFormat.XZ, InArchiveFormat.XZ },
+                    { OutArchiveFormat.Zip, InArchiveFormat.Zip }
+                };
 
-            #endregion
+        #endregion
 
         /// <summary>
         /// List of archive formats corresponding to specific extensions
         /// </summary>
         private static readonly Dictionary<string, InArchiveFormat> InExtensionFormats =
             new Dictionary<string, InArchiveFormat>
-            #region InExtensionFormats initialization
+                #region InExtensionFormats initialization
 
-            {{"7z",     InArchiveFormat.SevenZip},
-             {"gz",     InArchiveFormat.GZip},
-             {"tar",    InArchiveFormat.Tar},
-             {"rar",    InArchiveFormat.Rar},
-             {"zip",    InArchiveFormat.Zip},
-             {"lzma",   InArchiveFormat.Lzma},
-             {"lzh",    InArchiveFormat.Lzh},
-             {"arj",    InArchiveFormat.Arj},
-             {"bz2",    InArchiveFormat.BZip2},
-             {"cab",    InArchiveFormat.Cab},
-             {"chm",    InArchiveFormat.Chm},
-             {"deb",    InArchiveFormat.Deb},
-             {"iso",    InArchiveFormat.Iso},
-             {"rpm",    InArchiveFormat.Rpm},
-             {"wim",    InArchiveFormat.Wim},
-             {"udf",    InArchiveFormat.Udf},
-             {"mub",    InArchiveFormat.Mub},
-             {"xar",    InArchiveFormat.Xar},
-             {"hfs",    InArchiveFormat.Hfs},
-             {"dmg",    InArchiveFormat.Dmg},
-             {"Z",      InArchiveFormat.Lzw},
-             {"xz",     InArchiveFormat.XZ},
-             {"flv",    InArchiveFormat.Flv},
-             {"swf",    InArchiveFormat.Swf},
-             {"exe",    InArchiveFormat.PE},
-             {"dll",    InArchiveFormat.PE},
-             {"vhd",    InArchiveFormat.Vhd}
-        };
+                {
+                    { "7z",     InArchiveFormat.SevenZip },
+                    { "gz",     InArchiveFormat.GZip },
+                    { "tar",    InArchiveFormat.Tar },
+                    { "rar",    InArchiveFormat.Rar },
+                    { "zip",    InArchiveFormat.Zip },
+                    { "lzma",   InArchiveFormat.Lzma },
+                    { "lzh",    InArchiveFormat.Lzh },
+                    { "arj",    InArchiveFormat.Arj },
+                    { "bz2",    InArchiveFormat.BZip2 },
+                    { "cab",    InArchiveFormat.Cab },
+                    { "chm",    InArchiveFormat.Chm },
+                    { "deb",    InArchiveFormat.Deb },
+                    { "iso",    InArchiveFormat.Iso },
+                    { "rpm",    InArchiveFormat.Rpm },
+                    { "wim",    InArchiveFormat.Wim },
+                    { "udf",    InArchiveFormat.Udf },
+                    { "mub",    InArchiveFormat.Mub },
+                    { "xar",    InArchiveFormat.Xar },
+                    { "hfs",    InArchiveFormat.Hfs },
+                    { "dmg",    InArchiveFormat.Dmg },
+                    { "z",      InArchiveFormat.Lzw },
+                    { "xz",     InArchiveFormat.XZ },
+                    { "flv",    InArchiveFormat.Flv },
+                    { "swf",    InArchiveFormat.Swf },
+                    { "exe",    InArchiveFormat.PE },
+                    { "dll",    InArchiveFormat.PE },
+                    { "vhd",    InArchiveFormat.Vhd }
+                };
 
         #endregion
 
         /// <summary>
-        /// List of archive formats corresponding to specific signatures
+        /// Signatures per archive format.
         /// </summary>
-        /// <remarks>Based on the information at <a href="http://www.garykessler.net/library/file_sigs.html">this site.</a></remarks>
-        internal static readonly Dictionary<string, InArchiveFormat> InSignatureFormats =
-            new Dictionary<string, InArchiveFormat>
-            #region InSignatureFormats initialization
+        internal static readonly Dictionary<InArchiveFormat, IReadOnlyCollection<byte>> ArchiveFormatSignatures =
+            new Dictionary<InArchiveFormat, IReadOnlyCollection<byte>>
+                #region InSignatureFormats initialization
 
-            {{"37-7A-BC-AF-27-1C",                                              InArchiveFormat.SevenZip},
-            {"1F-8B-08",                                                        InArchiveFormat.GZip},
-            {"75-73-74-61-72",                                                  InArchiveFormat.Tar},
-            //257 byte offset
-            {"52-61-72-21-1A-07-00",                                            InArchiveFormat.Rar4},
-            {"52-61-72-21-1A-07-01-00",                                         InArchiveFormat.Rar},
-            {"50-4B-03-04",								                        InArchiveFormat.Zip},
-            {"5D-00-00-40-00",							                        InArchiveFormat.Lzma},
-            {"2D-6C-68",								                        InArchiveFormat.Lzh},
-            //^ 2 byte offset
-            {"1F-9D-90",								                        InArchiveFormat.Lzw},
-            {"60-EA",								                            InArchiveFormat.Arj},
-            {"42-5A-68",								                        InArchiveFormat.BZip2},
-            {"4D-53-43-46",								                        InArchiveFormat.Cab},
-            {"49-54-53-46",								                        InArchiveFormat.Chm},
-            {"21-3C-61-72-63-68-3E-0A-64-65-62-69-61-6E-2D-62-69-6E-61-72-79",	InArchiveFormat.Deb},
-            {"43-44-30-30-31",							                        InArchiveFormat.Iso},
-            //^ 0x8001, 0x8801 or 0x9001 byte offset
-            {"ED-AB-EE-DB",								                        InArchiveFormat.Rpm},
-            {"4D-53-57-49-4D-00-00-00",						                    InArchiveFormat.Wim},
-            {"udf",									                            InArchiveFormat.Udf},
-            {"mub",									                            InArchiveFormat.Mub},
-            {"78-61-72-21",								                        InArchiveFormat.Xar},
-            //0x400 byte offset
-            {"48-2B",								                            InArchiveFormat.Hfs},
-            {"FD-37-7A-58-5A",							                        InArchiveFormat.XZ},
-            {"46-4C-56",							                            InArchiveFormat.Flv},
-            {"46-57-53",							                            InArchiveFormat.Swf},
-            {"4D-5A",							                                InArchiveFormat.PE},
-            {"7F-45-4C-46",							                            InArchiveFormat.Elf},
-            {"78",                                                              InArchiveFormat.Dmg},
-            {"63-6F-6E-65-63-74-69-78",                                         InArchiveFormat.Vhd}};
-            #endregion
+                {
+                    [InArchiveFormat.Arj]      = Signature_ArjArchive,
+                    [InArchiveFormat.BZip2]    = Signature_BZip2Archive,
+                    [InArchiveFormat.Cab]      = Signature_CabArchive,
+                    [InArchiveFormat.GZip]     = Signature_GZipArchive,
+                    [InArchiveFormat.Lzh]      = Signature_LzhArchive,
+                    [InArchiveFormat.Lzma]     = Signature_LzmaArchive,
+                    [InArchiveFormat.Lzw]      = Signature_LzwArchive,
+                    [InArchiveFormat.Rar]      = Signature_RarArchive,
+                    [InArchiveFormat.Rar4]     = Signature_Rar4Archive,
+                    [InArchiveFormat.SevenZip] = Signature_SevenZipArchive,
+                    [InArchiveFormat.Tar]      = Signature_USTarArchive,
+                    [InArchiveFormat.Xar]      = Signature_XarArchive,
+                    [InArchiveFormat.XZ]       = Signature_XZArchive,
+                    [InArchiveFormat.Zip]      = Signature_ZipArchive,
+                };
 
-        internal static Dictionary<InArchiveFormat, string> InSignatureFormatsReversed;
-
-        static Formats()
-        {
-            InSignatureFormatsReversed = new Dictionary<InArchiveFormat, string>(InSignatureFormats.Count);
-
-            foreach (var pair in InSignatureFormats)
-            {
-                InSignatureFormatsReversed.Add(pair.Value, pair.Key);
-            }
-        }
+        #endregion
 
         /// <summary>
         /// Gets InArchiveFormat for specified archive file name
@@ -571,23 +576,41 @@
         /// <param name="fileName">Archive file name</param>
         /// <param name="reportErrors">Indicates whether to throw exceptions</param>
         /// <returns>InArchiveFormat recognized by the file name extension</returns>
-        /// <exception cref="System.ArgumentException"/>
+        /// <exception cref="System.ArgumentException" />
         public static InArchiveFormat FormatByFileName(string fileName, bool reportErrors)
         {
-            if (String.IsNullOrEmpty(fileName) && reportErrors)
+            var exception = FormatByFileName(fileName, out var archiveFormat);
+            if (exception != null)
             {
-                throw new ArgumentException("File name is null or empty string!");
-            }
-            string extension = Path.GetExtension(fileName).Substring(1);
-
-            if (!InExtensionFormats.ContainsKey(extension) && reportErrors)
-            {
-                throw new ArgumentException("Extension \"" + extension + "\" is not a supported archive file name extension.");
-
-
+                if (reportErrors)
+                    throw exception;
+                return (InArchiveFormat)(-1);
             }
 
-            return InExtensionFormats[extension];
+            return archiveFormat;
+        }
+
+        /// <summary>
+        /// Gets InArchiveFormat for specified archive file name
+        /// </summary>
+        /// <param name="fileName">Archive file name</param>
+        /// <param name="archiveFormat">InArchiveFormat recognized by the file name extension</param>
+        /// <returns>An exception if a failure occurred; otherwise null.</returns>
+        internal static Exception FormatByFileName(string fileName, out InArchiveFormat archiveFormat)
+        {
+            archiveFormat = (InArchiveFormat)(-1);
+            if (string.IsNullOrEmpty(fileName))
+                return new ArgumentException("File name is null or empty string!");
+
+            string extension = Path.GetExtension(fileName);
+            if (!string.IsNullOrEmpty(extension))
+                extension = extension.Substring(1).ToLower();
+
+            if (!InExtensionFormats.ContainsKey(extension))
+                return new ArgumentException("Extension \"" + extension + "\" is not a supported archive file name extension.");
+
+            archiveFormat = InExtensionFormats[extension];
+            return null;
         }
     }
 #endif
