@@ -574,14 +574,9 @@ namespace SevenZip
 
                             _archiveProperties = new ReadOnlyCollection<ArchiveProperty>(archProps);
 
-                            if (!_isSolid.HasValue && _format == InArchiveFormat.Zip)
-                            {
-                                _isSolid = false;
-                            }
-
                             if (!_isSolid.HasValue)
                             {
-                                _isSolid = true;
+                                _isSolid = false;
                             }
 
                             #endregion
@@ -616,31 +611,6 @@ namespace SevenZip
             {
                 GetArchiveInfo(disposeStream);
             }
-        }
-
-        /// <summary>
-        /// Produces an array of indexes from 0 to the maximum value in the specified array
-        /// </summary>
-        /// <param name="indexes">The source array</param>
-        /// <returns>The array of indexes from 0 to the maximum value in the specified array</returns>
-        private static uint[] SolidIndexes(uint[] indexes)
-        {
-            var max = indexes.Aggregate(0, (current, i) => Math.Max(current, (int) i));
-
-            if (max > 0)
-            {
-                max++;
-                var res = new uint[max];
-
-                for (var i = 0; i < max; i++)
-                {
-                    res[i] = (uint)i;
-                }
-
-                return res;
-            }
-
-            return indexes;
         }
 
         /// <summary>
@@ -1085,12 +1055,6 @@ namespace SevenZip
             try
             {
                 var indexes = new[] { (uint)index };
-                var entry = _archiveFileData[index];
-
-                if (_isSolid.Value && !entry.Method.Equals("Copy", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    indexes = SolidIndexes(indexes);
-                }
                 
                 using (var aec = GetArchiveExtractCallback(stream, (uint) index, indexes.Length))
                 {
@@ -1163,11 +1127,6 @@ namespace SevenZip
             origIndexes.Sort();
             uindexes = origIndexes.ToArray();
             
-            if (_isSolid.Value)
-            {
-                uindexes = SolidIndexes(uindexes);
-            }
-
             #endregion
 
             try
@@ -1271,11 +1230,6 @@ namespace SevenZip
         {
             DisposedCheck();
             InitArchiveFileData(false);
-
-            if (IsSolid)
-            {
-                throw new SevenZipExtractionFailedException("Solid archives are not supported.");
-            }
 
             foreach (var archiveFileInfo in ArchiveFileData)
             {
