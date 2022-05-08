@@ -269,7 +269,7 @@
                     string content = string.Empty;
                     using (var stream = new MemoryStream())
                     {
-                        extractor.ExtractFile(4, stream);
+                        extractor.ExtractFile(index, stream);
                         stream.Seek(0, SeekOrigin.Begin);
 
                         using (TextReader reader = new StreamReader(stream))
