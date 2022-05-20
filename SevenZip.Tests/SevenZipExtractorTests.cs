@@ -32,6 +32,22 @@
                 return result;
             }
         }
+        /// <summary>
+        /// TestCaseSource for ReadSolidArchive test
+        /// </summary>
+        public static List<TestFile> SolidArchivesFiles
+        {
+            get
+            {
+                var result = new List<TestFile>();
+                foreach (var file in Directory.GetFiles(Path.Combine(TestContext.CurrentContext.TestDirectory, "TestData_solid")))
+                {
+                    result.Add(new TestFile(file));
+                }
+
+                return result;
+            }
+        }
 
         [Test]
         public void ExtractFilesTest()
@@ -85,7 +101,7 @@
                         e.Cancel = true;
                     }
                 };
-               
+
                 tmp.ExtractArchive(OutputDirectory);
 
                 Assert.AreEqual(2, Directory.GetFiles(OutputDirectory).Length);
@@ -160,10 +176,10 @@
         [Test]
         public void ThreadedExtractionTest()
         {
-	        var destination1 = Path.Combine(OutputDirectory, "t1");
-	        var destination2 = Path.Combine(OutputDirectory, "t2");
+            var destination1 = Path.Combine(OutputDirectory, "t1");
+            var destination2 = Path.Combine(OutputDirectory, "t2");
 
-			var t1 = new Thread(() =>
+            var t1 = new Thread(() =>
             {
                 using (var tmp = new SevenZipExtractor(@"TestData\multiple_files.7z"))
                 {
@@ -172,8 +188,8 @@
             });
             var t2 = new Thread(() =>
             {
-				using (var tmp = new SevenZipExtractor(@"TestData\multiple_files.7z"))
-				{
+                using (var tmp = new SevenZipExtractor(@"TestData\multiple_files.7z"))
+                {
                     tmp.ExtractArchive(destination2);
                 }
             });
@@ -183,11 +199,11 @@
             t1.Join();
             t2.Join();
 
-			Assert.IsTrue(Directory.Exists(destination1));
-	        Assert.IsTrue(Directory.Exists(destination2));
-			Assert.AreEqual(3, Directory.GetFiles(destination1).Length);
-	        Assert.AreEqual(3, Directory.GetFiles(destination2).Length);
-		}
+            Assert.IsTrue(Directory.Exists(destination1));
+            Assert.IsTrue(Directory.Exists(destination2));
+            Assert.AreEqual(3, Directory.GetFiles(destination1).Length);
+            Assert.AreEqual(3, Directory.GetFiles(destination2).Length);
+        }
 
         [Test]
         public void ExtractArchiveWithLongPath()
@@ -211,7 +227,7 @@
                 Assert.AreEqual("file3.txt", fileNames[2]);
             }
         }
-        
+
         [Test]
         public void ReadArchivedFileData()
         {
@@ -233,6 +249,108 @@
             {
                 extractor.ExtractArchive(OutputDirectory);
                 Assert.AreEqual(1, Directory.GetFiles(OutputDirectory).Length);
+            }
+        }
+
+        [Test, TestCaseSource(nameof(SolidArchivesFiles))]
+        public void ReadStreamFromSolidArchiveTest(TestFile file)
+        {
+            using (var extractor = new SevenZipExtractor(file.FilePath))
+            {
+                bool isSolid = Path.GetFileName(file.FilePath).ToLowerInvariant().Contains("solid");
+
+                var fileData = extractor.ArchiveFileData;
+                Assert.AreEqual(isSolid, extractor.IsSolid);
+                Assert.AreEqual(5, fileData.Count);
+
+                // extract files in non-sequential order
+                foreach (int index in new int[] { 2, 4, 1, 3, 0 })
+                {
+                    string content = string.Empty;
+                    using (var stream = new MemoryStream())
+                    {
+                        extractor.ExtractFile(index, stream);
+                        stream.Seek(0, SeekOrigin.Begin);
+
+                        using (TextReader reader = new StreamReader(stream))
+                        {
+                            content = reader.ReadToEnd();
+                        }
+                    }
+                    Assert.AreEqual("test file", content);
+                }
+            }
+        }
+
+        [Test, TestCaseSource(nameof(SolidArchivesFiles))]
+        public void ExtractSpecificFilesFromSolidArchiveTest(TestFile file)
+        {
+            using (var extractor = new SevenZipExtractor(file.FilePath))
+            {
+                extractor.ExtractFiles(OutputDirectory, 2, 4);
+                Assert.AreEqual(2, Directory.GetFiles(OutputDirectory).Length);
+            }
+
+            Assert.AreEqual(2, Directory.GetFiles(OutputDirectory).Length);
+            Assert.Contains(Path.Combine(OutputDirectory, "test3.txt"), Directory.GetFiles(OutputDirectory));
+            Assert.Contains(Path.Combine(OutputDirectory, "test5.txt"), Directory.GetFiles(OutputDirectory));
+        }
+
+        [Test, TestCaseSource(nameof(SolidArchivesFiles))]
+        public void ExtractFileCallbackFromSolidArchiveTest(TestFile file)
+        {
+            using (var extractor = new SevenZipExtractor(file.FilePath))
+            {
+                extractor.ExtractFiles(args =>
+                {
+                    if (args.Reason == ExtractFileCallbackReason.Start &&
+                        (args.ArchiveFileInfo.Index == 2 || args.ArchiveFileInfo.Index == 4))
+                    {
+                        args.ExtractToFile = Path.Combine(OutputDirectory, args.ArchiveFileInfo.FileName);
+                    }
+                });
+            }
+
+            Assert.AreEqual(2, Directory.GetFiles(OutputDirectory).Length);
+            Assert.Contains(Path.Combine(OutputDirectory, "test3.txt"), Directory.GetFiles(OutputDirectory));
+            Assert.Contains(Path.Combine(OutputDirectory, "test5.txt"), Directory.GetFiles(OutputDirectory));
+        }
+
+        [Test, TestCaseSource(nameof(SolidArchivesFiles))]
+        public void ReadStreamCallbackFromSolidArchiveTest(TestFile file)
+        {
+            using (var extractor = new SevenZipExtractor(file.FilePath))
+            {
+                extractor.ExtractFiles(args =>
+                {
+                    if (args.Reason == ExtractFileCallbackReason.Start)
+                    {
+                        if (args.ArchiveFileInfo.Index == 2 || args.ArchiveFileInfo.Index == 4)
+                        {
+                            args.ExtractToStream = new MemoryStream();
+                        }
+                    }
+                    else if (args.Reason == ExtractFileCallbackReason.Done)
+                    {
+                        if (args.ExtractToStream != null)
+                        {
+                            string content = string.Empty;
+                            args.ExtractToStream.Seek(0, SeekOrigin.Begin);
+                            using (TextReader reader = new StreamReader(args.ExtractToStream))
+                            {
+                                content = reader.ReadToEnd();
+                            }
+                            Assert.AreEqual("test file", content);
+
+                            args.ExtractToStream.Dispose();
+                            args.ExtractToStream = null;
+                        }
+                    }
+                    else
+                    {
+                        Assert.Fail("Extract file failed " + args.Exception?.Message);
+                    }
+                });
             }
         }
     }
