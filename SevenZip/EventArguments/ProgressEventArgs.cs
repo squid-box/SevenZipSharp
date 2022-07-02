@@ -22,5 +22,9 @@
         /// Gets the change in done work percentage.
         /// </summary>
         public byte PercentDelta => _delta;
+        /// <summary>
+        /// Allows you to cancel the compression operation.
+        /// </summary>
+        public bool Cancel { get; set; } = false;
     }
 }

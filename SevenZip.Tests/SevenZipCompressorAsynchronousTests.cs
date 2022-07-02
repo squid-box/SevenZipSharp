@@ -1,6 +1,8 @@
 ﻿namespace SevenZip.Tests
 {
+    using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.IO;
     using System.Threading;
     using System.Threading.Tasks;
@@ -56,7 +58,7 @@
         {
             var compressionFinishedInvoked = false;
 
-            var compressor = new SevenZipCompressor {DirectoryStructure = false};
+            var compressor = new SevenZipCompressor { DirectoryStructure = false };
             compressor.CompressionFinished += (o, e) => compressionFinishedInvoked = true;
 
             compressor.BeginCompressFiles(TemporaryFile, @"TestData\zip.zip", @"TestData\tar.tar");
@@ -129,7 +131,7 @@
             var compressionFinishedInvoked = false;
             compressor.CompressionFinished += (o, e) => compressionFinishedInvoked = true;
 
-            compressor.BeginModifyArchive(TemporaryFile, new Dictionary<int, string>{{0, @"tartar"}});
+            compressor.BeginModifyArchive(TemporaryFile, new Dictionary<int, string> { { 0, @"tartar" } });
 
             var timeToWait = 1000;
             while (!compressionFinishedInvoked)
@@ -199,6 +201,24 @@
                 Assert.AreEqual(2, extractor.FilesCount);
                 Assert.IsTrue(extractor.ArchiveFileNames.Contains("zip.zip"));
                 Assert.IsTrue(extractor.ArchiveFileNames.Contains("tar.tar"));
+            }
+        }
+
+        [Test]
+        public void CompressFilesAsyncWithCancellationTest()
+        {
+            var compressor = new SevenZipCompressor { DirectoryStructure = false };
+            compressor.Compressing += Compressor_Compressing;
+            var task = compressor.CompressFilesAsync(TemporaryFile, @"TestData\zip.zip", @"TestData\tar.tar");
+
+            Assert.ThrowsAsync<SevenZipCompressionCanceledException>(async () => { await task; });            
+        }
+
+        private void Compressor_Compressing(object sender, ProgressEventArgs e)
+        {
+            if (e.PercentDone > 50)
+            {
+                e.Cancel = true;
             }
         }
 
