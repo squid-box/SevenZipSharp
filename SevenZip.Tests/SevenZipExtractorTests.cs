@@ -32,6 +32,20 @@
                 return result;
             }
         }
+        
+        [Test]
+        public void CheckCorruptedFile_DisposeStream()
+        {
+            using (var extractor = new SevenZipExtractor(@"TestData\CorruptedArchive.7z"))
+            {
+                if (!extractor.Check())
+                {
+                    
+                }
+            }
+            
+            File.OpenWrite(@"TestData\CorruptedArchive.7z");
+        }
 
         [Test]
         public void ExtractFilesTest()
