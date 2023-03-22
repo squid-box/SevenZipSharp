@@ -1,7 +1,12 @@
 # Changelog
 
-## 1.5.0 (2021-05-xx)
-- Added .NET 5.0 (Windows only) variant.
+## 1.5.2 (2023-03-22)
+- Fixed an issue when seeking in streams with SeekOrigin.End, thanks to GitHub user bneidhold.
+- Fixed an issue when checking multi-volume 7z archives, thanks to GitHub user panda73111.
+- Changed CI from AppVeyor to GitHub Actions.
+- .NET Framework version bumped from 4.5 to 4.7.2.
+
+## 1.5.0 (2021-08-15)
 - Added separate NuGet (Lite) excluding creation of self-extracting archives.
 
 ## 1.4.0 (2021-04-12)

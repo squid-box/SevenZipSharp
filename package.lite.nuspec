@@ -1,39 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-	<metadata xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
-		<id>Squid-Box.SevenZipSharp.Lite</id>
-		<version>1.0.0</version>
-		<authors>Joel Ahlgren</authors>
-		<summary>Managed 7-zip library written in C# that provides data extraction and compression (all 7-zip formats are supported).</summary>
-		<description>Wraps 7z.dll or any compatible one and makes use of LZMA SDK. Excludes creation of self-extracting executables, reducing file size.</description>
-		<language>en-US</language>
-		<license type="expression">LGPL-3.0-only</license>
-		<projectUrl>https://github.com/squid-box/SevenZipSharp</projectUrl>
-		<tags>7z sevenzip sevenzipsharp 7-zip</tags>
-		<releaseNotes>
-			Added new NuGet package excluding self-extraction functionality (Squid-Box.SevenZipSharp.Lite).
-			Added .NET Core 3.1 target, to prepare for future fixes.
-			Fixed issue with custom compression parameters for multithreading.
-			Fixed issue with exception handling in asynchronous compression and extraction methods, thanks to GitHub user kikijiki.
-		</releaseNotes>
-		<dependencies>
-			<group targetFramework="net45" />
-			<group targetFramework="netstandard2.0">
-				<dependency id="System.Configuration.ConfigurationManager" version="4.5.0" />
-				<dependency id="System.Security.Permissions" version="4.5.0" />
-			</group>
-			<group targetFramework="netcoreapp3.1">
-				<dependency id="System.Configuration.ConfigurationManager" version="4.5.0" />
-			</group>
-		</dependencies>
-	</metadata>
-	<files>
-		<file src="Stage\LiteRelease\netstandard2.0\SevenZipSharp.dll" target="lib\netstandard2.0" />
-		<file src="Stage\LiteRelease\netstandard2.0\SevenZipSharp.xml" target="lib\netstandard2.0" />
-		<file src="Stage\LiteRelease\netcoreapp3.1\SevenZipSharp.dll" target="lib\netcoreapp3.1" />
-		<file src="Stage\LiteRelease\netcoreapp3.1\SevenZipSharp.xml" target="lib\netcoreapp3.1" />
-		<file src="Stage\LiteRelease\net45\SevenZipSharp.dll" target="lib\net45" />
-		<file src="Stage\LiteRelease\net45\SevenZipSharp.xml" target="lib\net45" />
-		<file src="license" />
-	</files>
+    <metadata xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+        <id>Squid-Box.SevenZipSharp.Lite</id>
+        <version>1.0.0</version>
+        <authors>Joel Ahlgren</authors>
+        <summary>Managed 7-zip library written in C# that provides data extraction and compression (all 7-zip formats are supported).</summary>
+        <description>Wraps 7z.dll or any compatible one and makes use of LZMA SDK. Excludes creation of self-extracting executables, reducing file size.</description>
+        <readme>docs\readme.md</readme>
+        <language>en-US</language>
+        <license type="expression">LGPL-3.0-only</license>
+        <projectUrl>https://github.com/squid-box/SevenZipSharp</projectUrl>
+        <tags>7z sevenzip sevenzipsharp 7-zip</tags>
+        <releaseNotes>
+            Fixed an issue when seeking in streams with SeekOrigin.End, thanks to GitHub user bneidhold.
+            Fixed an issue when checking multi-volume 7z archives, thanks to GitHub user panda73111.
+        </releaseNotes>
+        <dependencies>
+            <group targetFramework="netstandard2.0">
+                <dependency id="System.Configuration.ConfigurationManager" version="4.5.0" />
+                <dependency id="System.Security.Permissions" version="4.5.0" />
+            </group>
+            <group targetFramework="net472" />
+            <group targetFramework="netcoreapp3.1">
+                <dependency id="System.Configuration.ConfigurationManager" version="4.5.0" />
+            </group>
+        </dependencies>
+    </metadata>
+    <files>
+        <file src="Stage\LiteRelease\netstandard2.0\SevenZipSharp.dll" target="lib\netstandard2.0" />
+        <file src="Stage\LiteRelease\netstandard2.0\SevenZipSharp.xml" target="lib\netstandard2.0" />
+        <file src="Stage\LiteRelease\netstandard2.0\SevenZipSharp.pdb" target="lib\netstandard2.0" />
+        <file src="Stage\LiteRelease\net472\SevenZipSharp.dll" target="lib\net472" />
+        <file src="Stage\LiteRelease\net472\SevenZipSharp.xml" target="lib\net472" />
+        <file src="Stage\LiteRelease\net472\SevenZipSharp.pdb" target="lib\net472" />
+        <file src="Stage\LiteRelease\netcoreapp3.1\SevenZipSharp.dll" target="lib\netcoreapp3.1" />
+        <file src="Stage\LiteRelease\netcoreapp3.1\SevenZipSharp.xml" target="lib\netcoreapp3.1" />
+        <file src="Stage\LiteRelease\netcoreapp3.1\SevenZipSharp.pdb" target="lib\netcoreapp3.1" />
+        <file src="license" />
+        <file src="readme.md" target="docs\" />
+    </files>
 </package>

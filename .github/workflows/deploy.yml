@@ -1,0 +1,35 @@
+on:
+  push:
+    branches: [ "master" ]
+
+env:
+  VERSION: '1.5.2.${{ github.run_number }}'
+
+jobs:
+  build:
+      
+    runs-on: windows-latest  
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Install .NET Core
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 6.0.x
+ 
+    - name: Compile solution
+      run: |
+        dotnet build -c Release /p:AssemblyVersion=${{ env.VERSION }} /p:Version=${{ env.VERSION }}
+        dotnet build -c LiteRelease /p:AssemblyVersion=${{ env.VERSION }} /p:Version=${{ env.VERSION }}
+      
+    - name: Pack NuGets
+      run: |
+        nuget pack package.regular.nuspec -version ${{ env.VERSION }}
+        nuget pack package.lite.nuspec -version ${{ env.VERSION }}
+
+    - name: Push NuGet packages
+      run: nuget push Squid-Box.SevenZipSharp*.nupkg -ApiKey ${{ secrets.NUGET_API_KEY }} -Source https://api.nuget.org/v3/index.json

@@ -1,16 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <AssemblyName>SevenZipSharp</AssemblyName>
-    <TargetFrameworks>netstandard2.0;net45;netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net472;netcoreapp3.1</TargetFrameworks>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>SevenZip.snk</AssemblyOriginatorKeyFile>
     <AssemblyTitle>SevenZipSharp</AssemblyTitle>
     <Company>Markovtsev Vadim</Company>
     <Product>SevenZipSharp</Product>
-    <ProductVersion>1.0.0.0</ProductVersion>
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <FileVersion>1.0.0.0</FileVersion>
-    <InformationalVersion>1.0.0.0</InformationalVersion>
     <Description>7-zip native library wrapper</Description>
     <Copyright>Copyright (C) Markovtsev Vadim 2009, 2010, licensed under LGPLv3</Copyright>
     <IntermediateOutputPath>..\Stage\obj\$(Configuration)\</IntermediateOutputPath>
@@ -76,11 +72,11 @@
     <EmbeddedResource Include="arch\Test.zip" /> 
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Condition="'$(TargetFramework)' != 'net45'" Include="System.Configuration.ConfigurationManager" Version="4.5.0" />
+    <PackageReference Condition="'$(TargetFramework)' != 'net472'" Include="System.Configuration.ConfigurationManager" Version="4.5.0" />
     <PackageReference Condition="'$(TargetFramework)' == 'netstandard2.0'" Include="System.Security.Permissions" Version="4.5.0" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="System.Configuration" Condition="'$(TargetFramework)' == 'net45'">
+    <Reference Include="System.Configuration" Condition="'$(TargetFramework)' == 'net472'">
       <HintPath>C:\Windows\Microsoft.NET\assembly\GAC_MSIL\System.Configuration\v4.0_4.0.0.0__b03f5f7f11d50a3a\System.Configuration.dll</HintPath>
     </Reference>
   </ItemGroup>

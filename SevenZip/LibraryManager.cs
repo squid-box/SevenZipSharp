@@ -4,7 +4,7 @@ namespace SevenZip
     using System.Collections.Generic;
     using System.Configuration;
     using System.Diagnostics;
-#if NET45 || NETSTANDARD2_0
+#if NET472 || NETSTANDARD2_0
     using System.Security.Permissions;
 #endif
     using System.IO;
@@ -345,7 +345,7 @@ namespace SevenZip
         /// <param name="format">Archive format</param>
         public static void FreeLibrary(object user, Enum format)
         {
-#if NET45 || NETSTANDARD2_0
+#if NET472 || NETSTANDARD2_0
             var sp = new SecurityPermission(SecurityPermissionFlag.UnmanagedCode);
             sp.Demand();
 #endif
@@ -423,7 +423,7 @@ namespace SevenZip
             {
                 if (_inArchives[user][format] == null)
                 {
-#if NET45 || NETSTANDARD2_0
+#if NET472 || NETSTANDARD2_0
                     var sp = new SecurityPermission(SecurityPermissionFlag.UnmanagedCode);
                     sp.Demand();
 #endif
@@ -480,7 +480,7 @@ namespace SevenZip
             {
                 if (_outArchives[user][format] == null)
                 {
-#if NET45 || NETSTANDARD2_0
+#if NET472 || NETSTANDARD2_0
                     var sp = new SecurityPermission(SecurityPermissionFlag.UnmanagedCode);
                     sp.Demand();
 #endif

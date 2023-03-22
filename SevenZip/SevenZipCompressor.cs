@@ -6,7 +6,7 @@ namespace SevenZip
     using System.IO;
     using System.Linq;
     using System.Runtime.InteropServices;
-#if NET45 || NETSTANDARD2_0
+#if NET472 || NETSTANDARD2_0
     using System.Security.Permissions;
 #endif
 
@@ -311,8 +311,8 @@ namespace SevenZip
                     var names = new List<IntPtr>(2 + CustomParameters.Count);
                     var values = new List<PropVariant>(2 + CustomParameters.Count);
 
-#if NET45 || NETSTANDARD2_0
-                    var sp = new SecurityPermission(SecurityPermissionFlag.UnmanagedCode);
+#if NET472 || NETSTANDARD2_0
+                        var sp = new SecurityPermission(SecurityPermissionFlag.UnmanagedCode);
                     sp.Demand();
 #endif
 
