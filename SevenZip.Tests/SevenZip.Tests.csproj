@@ -9,6 +9,7 @@
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>SevenZipTests.snk</AssemblyOriginatorKeyFile>
     <Configurations>Debug;Release;LiteDebug;LiteRelease</Configurations>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DefineConstants>SFX</DefineConstants>
