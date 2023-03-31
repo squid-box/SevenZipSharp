@@ -77,11 +77,11 @@
         {
             using var tmp = new SevenZipExtractor(@"TestData\multiple_files.7z");
 
-            tmp.FileExtractionStarted += (s, e) =>
+            tmp.FileExtractionStarted += (_, args) =>
             {
-                if (e.FileInfo.Index == 2)
+                if (args.FileInfo.Index == 2)
                 {
-                    e.Cancel = true;
+                    args.Cancel = true;
                 }
             };
                
@@ -95,11 +95,11 @@
         {
             using var tmp = new SevenZipExtractor(@"TestData\multiple_files.7z");
 
-            tmp.FileExtractionStarted += (s, e) =>
+            tmp.FileExtractionStarted += (_, args) =>
             {
-                if (e.FileInfo.Index == 1)
+                if (args.FileInfo.Index == 1)
                 {
-                    e.Skip = true;
+                    args.Skip = true;
                 }
             };
 
@@ -117,6 +117,25 @@
 
             tmp.ExtractArchive(OutputDirectory);
             Assert.AreEqual(3, Directory.GetFiles(OutputDirectory).Length);
+        }
+
+        [Test]
+        public void ExtractionFromStream_LeaveStreamOpenTest()
+        {
+            using var fileStream = new FileStream(@"TestData\multiple_files.7z", FileMode.Open);
+            using var extractor1 = new SevenZipExtractor(fileStream, leaveOpen: true);
+
+            extractor1.ExtractArchive(OutputDirectory);
+
+            Assert.IsTrue(fileStream.CanRead);
+
+            extractor1.Dispose();
+
+            using var extractor2 = new SevenZipExtractor(fileStream, leaveOpen: false);
+
+            extractor2.ExtractArchive(OutputDirectory);
+
+            Assert.IsFalse(fileStream.CanRead);
         }
 
         [Test]
@@ -159,17 +178,13 @@
 
 			var t1 = new Thread(() =>
             {
-                using (var tmp = new SevenZipExtractor(@"TestData\multiple_files.7z"))
-                {
-                    tmp.ExtractArchive(destination1);
-                }
+                using var tmp = new SevenZipExtractor(@"TestData\multiple_files.7z");
+                tmp.ExtractArchive(destination1);
             });
             var t2 = new Thread(() =>
             {
-				using (var tmp = new SevenZipExtractor(@"TestData\multiple_files.7z"))
-				{
-                    tmp.ExtractArchive(destination2);
-                }
+                using var tmp = new SevenZipExtractor(@"TestData\multiple_files.7z");
+                tmp.ExtractArchive(destination2);
             });
 
             t1.Start();

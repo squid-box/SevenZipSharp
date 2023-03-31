@@ -1,6 +1,5 @@
 namespace SevenZip
 {
-    using System;
     using System.IO;
     using System.Threading.Tasks;
 
@@ -14,28 +13,32 @@ namespace SevenZip
         /// </summary>
         private void RecreateInstanceIfNeeded()
         {
-            if (NeedsToBeRecreated)
+            if (!NeedsToBeRecreated)
             {
-                NeedsToBeRecreated = false;
-                Stream backupStream = null;
-                string backupFileName = null;
-                if (String.IsNullOrEmpty(_fileName))
-                {
-                    backupStream = _inStream;
-                }
-                else
-                {
-                    backupFileName = _fileName;
-                }
-                CommonDispose();
-                if (backupStream == null)
-                {
-                    Init(backupFileName);
-                }
-                else
-                {
-                    Init(backupStream);
-                }
+                return;
+            }
+            
+            Stream backupStream = null;
+            string backupFileName = null;
+                
+            if (string.IsNullOrEmpty(_fileName))
+            {
+                backupStream = _inStream;
+            }
+            else
+            {
+                backupFileName = _fileName;
+            }
+
+            CommonDispose();
+
+            if (backupStream == null)
+            {
+                Init(backupFileName);
+            }
+            else
+            {
+                Init(backupStream);
             }
         }
 

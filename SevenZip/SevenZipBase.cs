@@ -14,8 +14,8 @@ namespace SevenZip
     public abstract class SevenZipBase : MarshalByRefObject
     {
         private readonly bool _reportErrors;
-        private readonly int _uniqueID;
-        private static readonly List<int> Identifiers = new List<int>();
+        private readonly int _uniqueId;
+        private static int _incrementingUniqueId = int.MinValue;
 
         /// <summary>
         /// True if the instance of the class needs to be recreated in new thread context; otherwise, false.
@@ -94,7 +94,7 @@ namespace SevenZip
         /// <summary>
         /// Gets the unique identifier of this SevenZipBase instance.
         /// </summary>
-        public int UniqueID => _uniqueID;
+        public int UniqueID => _uniqueId;
 
         /// <summary>
         /// User exceptions thrown during the requested operations, for example, in events.
@@ -103,22 +103,8 @@ namespace SevenZip
 
         private static int GetUniqueID()
         {
-            lock (Identifiers)
-            {
-                int id;
-
-                var rnd = new Random(DateTime.Now.Millisecond);
-
-                do
-                {
-                    id = rnd.Next(int.MaxValue);
-                }
-                while (Identifiers.Contains(id));
-
-                Identifiers.Add(id);
-
-                return id;
-            }
+            var newUniqueId = Interlocked.Increment(ref _incrementingUniqueId);
+            return newUniqueId;
         }
 
         /// <summary>
@@ -129,19 +115,7 @@ namespace SevenZip
         {
             Password = password;
             _reportErrors = true;
-            _uniqueID = GetUniqueID();
-        }
-
-        /// <summary>
-        /// Removes the UniqueID from the list.
-        /// </summary>
-        ~SevenZipBase()
-        {
-            // This lock probably isn't necessary but just in case...
-            lock (Identifiers)
-            {
-                Identifiers.Remove(_uniqueID);
-            }
+            _uniqueId = GetUniqueID();
         }
 
         /// <summary>
@@ -283,7 +257,7 @@ namespace SevenZip
                 return false;
             }
 
-            return _uniqueID == instance._uniqueID;
+            return _uniqueId == instance._uniqueId;
         }
 
         /// <summary>
@@ -292,7 +266,7 @@ namespace SevenZip
         /// <returns> A hash code for the current SevenZipBase.</returns>
         public override int GetHashCode()
         {
-            return _uniqueID;
+            return _uniqueId;
         }
 
         /// <summary>
@@ -313,7 +287,7 @@ namespace SevenZip
                 type = "SevenZipCompressor";
             }
 
-            return $"{type} [{_uniqueID}]";
+            return $"{type} [{_uniqueId}]";
         }
     }
 }

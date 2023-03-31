@@ -203,7 +203,7 @@
                         settings.ValidationEventHandler +=
                             ((s, t) =>
                             {
-                                validationErrors += String.Format(CultureInfo.InvariantCulture, "[{0}]: {1}\n",
+                                validationErrors += string.Format(CultureInfo.InvariantCulture, "[{0}]: {1}\n",
                                                                   t.Severity.ToString(), t.Message);
                             });
                         using (var rdr = XmlReader.Create(cfg, settings))
@@ -306,7 +306,7 @@
             foreach (var command in settings.Keys)
             {
                 buf =
-                    Encoding.UTF8.GetBytes(String.Format(CultureInfo.InvariantCulture, "{0}=\"{1}\"\n", command,
+                    Encoding.UTF8.GetBytes(string.Format(CultureInfo.InvariantCulture, "{0}=\"{1}\"\n", command,
                                                          settings[command]));
                 ms.Write(buf, 0, buf.Length);
             }
