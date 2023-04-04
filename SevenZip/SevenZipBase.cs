@@ -207,6 +207,9 @@ namespace SevenZip
                             case -2147024891:
                                 exception = new SevenZipException("Access is denied. (0x80070005: E_ACCESSDENIED)");
                                 break;
+                            case -2146233086:
+                                exception = new SevenZipException("Argument is out of range. (0x80131502: E_ARGUMENTOUTOFRANGE)");
+                                break;
                             default:
                                 exception = new SevenZipException(
                                     $"Execution has failed due to an internal SevenZipSharp issue (0x{hresult:x} / {hresult}).\n" +

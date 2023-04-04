@@ -13,32 +13,31 @@ namespace SevenZip
         /// </summary>
         private void RecreateInstanceIfNeeded()
         {
-            if (!NeedsToBeRecreated)
+            if (NeedsToBeRecreated)
             {
-                return;
-            }
-            
-            Stream backupStream = null;
-            string backupFileName = null;
-                
-            if (string.IsNullOrEmpty(_fileName))
-            {
-                backupStream = _inStream;
-            }
-            else
-            {
-                backupFileName = _fileName;
-            }
+                NeedsToBeRecreated = false;
+                Stream backupStream = null;
+                string backupFileName = null;
 
-            CommonDispose();
+                if (string.IsNullOrEmpty(_fileName))
+                {
+                    backupStream = _inStream;
+                }
+                else
+                {
+                    backupFileName = _fileName;
+                }
 
-            if (backupStream == null)
-            {
-                Init(backupFileName);
-            }
-            else
-            {
-                Init(backupStream);
+                CommonDispose();
+
+                if (backupStream == null)
+                {
+                    Init(backupFileName);
+                }
+                else
+                {
+                    Init(backupStream);
+                }
             }
         }
 

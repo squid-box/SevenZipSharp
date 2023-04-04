@@ -381,24 +381,26 @@
         [Test]
         public void AppendEncryptedFileToStreamTest()
         {
-            using var fileStream = new FileStream(TemporaryFile, FileMode.Create);
-
-            var compressor = new SevenZipCompressor
+            using (var fileStream = new FileStream(TemporaryFile, FileMode.Create))
             {
-                ArchiveFormat = OutArchiveFormat.SevenZip,
-                CompressionMethod = CompressionMethod.Lzma2,
-                CompressionMode = CompressionMode.Append,
-                ZipEncryptionMethod = ZipEncryptionMethod.Aes256,
-                CompressionLevel = CompressionLevel.Normal,
-                EncryptHeaders = true
-            };
+                var compressor = new SevenZipCompressor
+                {
+                    ArchiveFormat = OutArchiveFormat.SevenZip,
+                    CompressionMethod = CompressionMethod.Lzma2,
+                    CompressionMode = CompressionMode.Append,
+                    ZipEncryptionMethod = ZipEncryptionMethod.Aes256,
+                    CompressionLevel = CompressionLevel.Normal,
+                    EncryptHeaders = true
+                };
 
-            compressor.CompressFilesEncrypted(fileStream, "password", @"TestData\zip.zip");
+                compressor.CompressFilesEncrypted(fileStream, "password", @"TestData\zip.zip");
+            }
 
-            using var extractor = new SevenZipExtractor(TemporaryFile, "password");
-
-            Assert.AreEqual(1, extractor.FilesCount);
-            Assert.AreEqual("zip.zip", extractor.ArchiveFileNames[0]);
+            using (var extractor = new SevenZipExtractor(TemporaryFile, "password"))
+            {
+                Assert.AreEqual(1, extractor.FilesCount);
+                Assert.AreEqual("zip.zip", extractor.ArchiveFileNames[0]);
+            }
         }
     }
 }
