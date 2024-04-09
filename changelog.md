@@ -1,5 +1,24 @@
 # Changelog
 
+## 1.6.2 (2024-04-10)
+- Ensuring streams provided are at the beginning of the file, thanks to GitHub user fgimian.
+- Fixed an issues where SFX archives would not be correctly detected, thanks to GitHub user fgimian.
+- Added support for APFS format, thanks to GitHub user elihwyma.
+- Added support for Wim format, thanks to GitHub user pysj.
+
+## 1.6.1 (2023-04-04)
+- Fixed broken asynchronous extraction.
+
+## 1.6.0 (2023-03-31)
+- Added option to leave streams open after extraction, thanks to GitHub user acrilly-msft.
+- Added support for GPT and NTFS formats, thanks to GitHub user acrilly-msft.
+- Added support for the CPIO format, thanks to GitHub user doug24.
+- Changed how the Unique ID's are generated, thanks to GitHub user RoadTrain.
+- Fixed an issue with multi-volume archives of more than 1000 parts, thanks to GitHub user in1gma.
+- Fixed an issue when extracting from a read-only file, thanks to GitHub user benjicoh.
+- Fixed an issue with appending to archives with encrypted headers, thanks to GitHub user amarendrabiorad.
+- Fixed an issue when appending to encrypted archives, using streams.
+
 ## 1.5.2 (2023-03-22)
 - Fixed an issue when seeking in streams with SeekOrigin.End, thanks to GitHub user bneidhold.
 - Fixed an issue when checking multi-volume 7z archives, thanks to GitHub user panda73111.

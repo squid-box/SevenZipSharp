@@ -1,5 +1,22 @@
 This is a fork from [tomap's fork](https://github.com/tomap/SevenZipSharp) of the [original CodePlex project](https://archive.codeplex.com/?p=sevenzipsharp).
 
+-------------------------------------------------------------
+
+-------------------------------------------------------------
+
+-------------------------------------------------------------
+
+# Project Archived
+As of 2024-04-10, I've decided to officially release the final version of this fork - 1.6.2 - and archive the project. I myself don't use it anymore, and the sporadic bursts of activity from me aren't useful and I have a hard time even doing good code reviews on submitted code as I'm not actively working on this anymore.
+
+The bugs that exist will remain, feel free to fork this repository (as I once did from tomap) if you want to fix something.
+
+-------------------------------------------------------------
+
+-------------------------------------------------------------
+
+-------------------------------------------------------------
+
 ## Continuous Integration
 
 | Squid-Box.SevenZipSharp                                                                                                          | Squid-Box.SevenZipSharp.Lite                                                                                                               |

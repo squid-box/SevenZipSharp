@@ -11,7 +11,12 @@
         <license type="expression">LGPL-3.0-only</license>
         <projectUrl>https://github.com/squid-box/SevenZipSharp</projectUrl>
         <tags>7z sevenzip sevenzipsharp 7-zip</tags>
-        <releaseNotes>Fixed broken asynchronous extraction.</releaseNotes>
+        <releaseNotes>
+            Ensuring streams provided are at the beginning of the file, thanks to GitHub user fgimian.
+            Fixed an issues where SFX archives would not be correctly detected, thanks to GitHub user fgimian.
+            Added support for APFS format, thanks to GitHub user elihwyma.
+            Added support for Wim format, thanks to GitHub user pysj.
+        </releaseNotes>
         <dependencies>
             <group targetFramework="netstandard2.0">
                 <dependency id="System.Configuration.ConfigurationManager" version="4.5.0" />
