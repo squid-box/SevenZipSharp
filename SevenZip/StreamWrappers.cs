@@ -427,7 +427,7 @@ namespace SevenZip
             int offset = 0;
             var originalSize = (int) size;
             Position += size;
-            _overallLength = Math.Max(Position + 1, _overallLength);
+            _overallLength = Math.Max(Position, _overallLength);
             while (size > _volumeSize - Streams[CurrentStream].Position)
             {
                 var count = (int) (_volumeSize - Streams[CurrentStream].Position);
