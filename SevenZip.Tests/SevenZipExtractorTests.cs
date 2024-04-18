@@ -21,7 +21,7 @@
 
                 foreach (var file in Directory.GetFiles(Path.Combine(TestContext.CurrentContext.TestDirectory, "TestData")))
                 {
-                    if (file.Contains("multi") || file.Contains("long_path"))
+                    if (file.Contains("multi") || file.Contains("long_path") || file.Contains("CorruptedArchive.7z"))
                     {
                         continue;
                     }
@@ -31,6 +31,20 @@
 
                 return result;
             }
+        }
+        
+        [Test]
+        public void CheckCorruptedFile_DisposeStream()
+        {
+            using (var extractor = new SevenZipExtractor(@"TestData\CorruptedArchive.7z"))
+            {
+                if (!extractor.Check())
+                {
+                    
+                }
+            }
+            
+            File.OpenWrite(@"TestData\CorruptedArchive.7z");
         }
 
         [Test]

@@ -1009,6 +1009,11 @@ namespace SevenZip
             }
             catch (Exception)
             {
+                if (_archiveStream is DisposeVariableWrapper disposeVariableWrapper)
+                {
+                    disposeVariableWrapper.DisposeStream = true;
+	        }
+
                 return false;
             }
             finally
